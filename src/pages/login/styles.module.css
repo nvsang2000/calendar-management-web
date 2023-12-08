@@ -1,0 +1,21 @@
+.login-container .login-header {
+  color: var(--green);
+  font-style: normal;
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 59px;
+  padding: 40px 0;
+}
+
+.login-container .login-form .login-form__title {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 30px;
+  color: var(--black);
+}
+
+.login-container .login-form .login-form__remember-text {
+  font-size: 24px;
+  line-height: 29px;
+  font-weight: 500;
+}

@@ -42,33 +42,33 @@ function MyApp({
   )
 }
 
-// MyApp.getInitialProps = async ({ ctx }: { ctx: any }) => {
-//   const { res, pathname } = ctx
-//   const { accessToken } = nextCookies(ctx)
-//   const { publicRuntimeConfig } = getConfig()
-//   const baseURL = publicRuntimeConfig.NEXT_PUBLIC_ENV_API_URL
+MyApp.getInitialProps = async ({ ctx }: { ctx: any }) => {
+  const { res, pathname } = ctx
+  const { accessToken } = nextCookies(ctx)
+  const { publicRuntimeConfig } = getConfig()
+  const baseURL = publicRuntimeConfig.NEXT_PUBLIC_ENV_API_URL
 
-//   const redirectOnError = () =>
-//     res && !routesNoNeedAuth.includes(pathname)
-//       ? res.writeHead(302, { Location: '/login' }).end()
-//       : {}
+  const redirectOnError = () =>
+    res && !routesNoNeedAuth.includes(pathname)
+      ? res.writeHead(302, { Location: '/login' }).end()
+      : {}
 
-//   try {
-//     const getUserResponse = await fetch(`${baseURL}auth/profile`, {
-//       headers: {
-//         Authorization: `Bearer ${accessToken}`,
-//       },
-//     })
-//     if (getUserResponse.ok) {
-//       return {
-//         currentUser: await getUserResponse.json(),
-//       }
-//     } else {
-//       return await redirectOnError()
-//     }
-//   } catch (err) {
-//     return redirectOnError()
-//   }
-// }
+  try {
+    const getUserResponse = await fetch(`${baseURL}auth/profile`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+    if (getUserResponse.ok) {
+      return {
+        currentUser: await getUserResponse.json(),
+      }
+    } else {
+      return await redirectOnError()
+    }
+  } catch (err) {
+    return redirectOnError()
+  }
+}
 
 export default MyApp

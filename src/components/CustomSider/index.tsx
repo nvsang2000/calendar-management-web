@@ -26,21 +26,6 @@ const menus: MenuItem[] = [
     title: 'Policies',
     href: '/admin/policies',
   },
-  {
-    key: '(Business)',
-    title: 'Business',
-    href: '/admin/business',
-  },
-  {
-    key: '(Category)',
-    title: 'Categories',
-    href: '/admin/categories',
-  },
-  {
-    key: '(Scratch)',
-    title: 'Search',
-    href: '/admin/scratchs',
-  },
 ]
 
 // const listMenuAdmin = [
