@@ -5,6 +5,7 @@ import { parseSafe } from '~/helpers'
 import SplashScreen from '../SplashScreen'
 import CustomSider from '../CustomSider'
 import { ROLE_ADMIN } from '~/constants'
+import { Header } from '..'
 const { Content } = Layout
 
 const DefaultLayout: React.FC = ({
@@ -59,27 +60,27 @@ const DefaultLayout: React.FC = ({
 
   if (!loading) {
     return mounted ? (
-      <Layout className={''} style={{ minHeight: '100vh' }}>
+      <Layout className={'relative '} style={{ minHeight: '100vh' }}>
         <CustomSider />
-        <Content
-          style={{
-            margin: '24px 16px 40px',
-          }}
-        >
-          {isAccessable() ? (
-            children
-          ) : (
-            <div
-              className={
-                'bg-white rounded-[8px] grid place-content-center min-h-[300px] text-[15px]'
-              }
-            >
-              {
-                'You do not have access rights or this feature has not been  enabled!'
-              }
-            </div>
-          )}
-        </Content>
+        <Layout className="site-layout">
+          <Content
+            className={'mt-[10px] relative !-z-0 p-[20px]'}
+          >
+            {isAccessable() ? (
+              children
+            ) : (
+              <div
+                className={
+                  'bg-white !text-black rounded-[8px] grid place-content-center min-h-[300px] text-[15px]'
+                }
+              >
+                {
+                  'You do not have access rights or this feature has not been  enabled!'
+                }
+              </div>
+            )}
+          </Content>
+        </Layout>
       </Layout>
     ) : (
       <></>

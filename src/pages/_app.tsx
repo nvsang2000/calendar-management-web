@@ -1,4 +1,5 @@
 import '~/styles/globals.css'
+import '~/styles/index.css'
 import React from 'react'
 import { SWRConfig } from 'swr'
 import type { AppProps } from 'next/app'
@@ -8,6 +9,8 @@ import nextCookies from 'next-cookies'
 import { AuthProvider } from '~/contexts/auth'
 import { SettingsProvider } from '~/contexts/settings'
 import getConfig from 'next/config'
+import { ConfigProvider, theme } from 'antd'
+import { StyleProvider } from '@ant-design/cssinjs'
 
 const routesNoNeedAuth = ['/login']
 const routesNoNeedDefaultLayout = ['/admin/orders/print']
@@ -29,12 +32,13 @@ function MyApp({
       <SettingsProvider>
         <AuthProvider>
           {/* @ts-ignore */}
+
           <DefaultLayout
             currentUser={currentUser}
             globalSettings={globalSettings}
             pageProps={pageProps}
           >
-            <Component />
+             <Component />
           </DefaultLayout>
         </AuthProvider>
       </SettingsProvider>

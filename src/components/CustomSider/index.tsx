@@ -1,12 +1,16 @@
+import { Divider, Image, Layout, Menu } from 'antd'
 import Link from 'next/link'
-import React, { useEffect, useMemo, useState } from 'react'
-import { useAuth, useDevice, useSettings } from '~/hooks'
-import { MenuOutlined, CloseOutlined, RightOutlined } from '@ant-design/icons'
-import { Divider, Dropdown, Image, MenuProps } from 'antd'
 import { useRouter } from 'next/router'
-import Svg from '../Svg'
+import React, { useCallback, useState, useEffect, useMemo } from 'react'
 import { parseSafe } from '~/helpers'
+import { useAuth, useDevice, useSettings } from '~/hooks'
+import Svg from '../Svg'
+import { MenuOutlined, CloseOutlined, RightOutlined } from '@ant-design/icons'
 import { ROLE_ADMIN } from '~/constants'
+
+const { SubMenu } = Menu
+const { Sider } = Layout
+
 interface MenuItem {
   key: string
   title: string
@@ -17,32 +21,73 @@ interface MenuItem {
 
 const menus: MenuItem[] = [
   {
-    key: '(User)',
-    title: 'Users',
-    href: '/admin/users',
+    key: '(Dashboard)',
+    title: 'Dashboard',
+    icon: <Svg name={'dashboard'} fill={'var(--primary-color)'} />,
+    href: '/admin',
   },
   {
-    key: '(Policy)',
-    title: 'Policies',
-    href: '/admin/policies',
+    key: '(User)(Policy)',
+    title: 'Manager Users',
+    icon: <Svg name={'users'} fill={'var(--primary-color)'} />,
+    submenu: [
+      {
+        key: '(User)',
+        title: 'Users',
+        href: '/admin/users',
+      },
+      {
+        key: '(Policy)',
+        title: 'Policies',
+        href: '/admin/policies',
+      },
+    ],
+  },
+  {
+    key: '(Staff)(Group)',
+    title: 'Manager Staffs',
+    icon: <Svg name={'users'} fill={'var(--primary-color)'} />,
+    submenu: [
+      {
+        key: '(Staff)',
+        title: 'Staffs',
+        href: '/admin/users',
+      },
+      {
+        key: '(Group)',
+        title: 'Groups',
+        href: '/admin/policies',
+      },
+    ],
+  },
+  {
+    key: '(Profile)',
+    title: 'Profile Me',
+    icon: <Svg name={'avatar'} fill={'var(--primary-color)'} />,
+    href: '/admin/profile',
+    submenu: [
+      {
+        key: '(Profile)(Infor)',
+        title: 'Information',
+        href: '/admin/profile/infor',
+      },
+      {
+        key: '(Profile)(Logout)',
+        title: 'Logout',
+        href: '/admin/profile/logout',
+      },
+    ],
   },
 ]
 
-// const listMenuAdmin = [
-//   {
-//     key: '(Setting)',
-//     title: 'Setting',
-//     href: '/admin/settings',
-//   },
-// ]
-
 const CustomSider = ({}) => {
   const router = useRouter()
-  const { currentUser, isAuthenticated, logout } = useAuth()
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const isAdmin = ROLE_ADMIN.includes(currentUser?.role)
-  const { settings } = useSettings()
+  const currentPath = router.pathname
   const { isTablet } = useDevice()
+  const [openKeys, setOpenKeys] = useState<string[]>([])
+  const { currentUser, isAuthenticated, logout } = useAuth()
+  const { settings } = useSettings()
+  const isAdmin = ROLE_ADMIN.includes(currentUser?.role)
 
   const blacklistFeatures = useMemo(() => {
     const { blacklistFeatures } = settings || {}
@@ -61,13 +106,29 @@ const CustomSider = ({}) => {
       ) < 0,
   ) as MenuItem[]
 
-  useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.classList.add('overflow-hidden')
-    } else {
-      document.body.classList.remove('overflow-hidden')
+  const getSelectedSubmenu = useCallback(() => {
+    const keys: { [key: string]: () => string } = {
+      '/admin/users': function () {
+        return '(User)(Policy)'
+      },
+      '/admin/policies': function () {
+        return '(User)(Policy)'
+      },
+      default: function () {
+        return '()'
+      },
     }
-  }, [isMobileMenuOpen])
+
+    return (
+      keys[currentPath] ||
+      keys[`/admin${currentPath}`] ||
+      keys['default']
+    )()
+  }, [currentPath])
+
+  useEffect(() => {
+    setOpenKeys([getSelectedSubmenu()])
+  }, [currentPath, getSelectedSubmenu])
 
   const checkShowTab = (key: string) => {
     const values = [
@@ -76,185 +137,171 @@ const CustomSider = ({}) => {
     ]
 
     return (
-      ROLE_ADMIN.includes(currentUser?.role) ||
+      isAdmin ||
       values.some(
         (abl) => abl.action === 'read' && key.includes(`(${abl.subject})`),
       )
     )
   }
 
-  const itemsDropdown: MenuProps['items'] = [
-    {
-      label: <div className={'hover:text-primary-color'}>Profile</div>,
-      key: '0',
-    },
-    {
-      label: (
-        <div
-          className={'hover:text-primary-color'}
-          onClick={() => router.push('/admin/profile/assets')}
-        >
-          Assets
-        </div>
-      ),
-      key: '1',
-    },
-    {
-      type: 'divider',
-    },
-    {
-      label: (
-        <div className={'hover:text-primary-color'} onClick={logout}>
-          Sign out
-        </div>
-      ),
-      key: '3',
-    },
-  ]
+  const renderMenus: () => any[] = () => {
+    return adminMenus.map((item: any) => {
+      const showTab = checkShowTab(item.key)
+
+      if (!isAdmin && !showTab) {
+        return null
+      }
+
+      return item?.submenu
+        ? {
+            label: (
+              <span className={`text-[14px] ml-[10px] inline-block text-black`}>
+                {item.title}
+              </span>
+            ),
+            key: item.key,
+            ...(item.icon && { icon: item.icon }),
+            onTitleClick: ({ key }: any) =>
+              setOpenKeys([...(openKeys?.[0] === key ? [] : [key])]),
+            children: item.submenu
+              ?.filter((i: any) => !!i?.title)
+              .map((subItem: any) => {
+                const showSubItem = isAdmin ? checkShowTab(subItem.key) : true
+                if (!showSubItem) {
+                  return null
+                } else {
+                  return {
+                    label: (
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <span
+                          className={`hover:text-primary-color ml-[4px] text-[14px] inline-block ${
+                            currentPath === subItem.href
+                              ? 'text-primary-color'
+                              : 'text-black'
+                          }`}
+                        >
+                          {subItem.title}
+                        </span>
+                      </div>
+                    ),
+                    key: `${subItem.href}`,
+                    onClick: () => {
+                      if (subItem.key === '(Profile)(Logout)') return logout()
+                      subItem.href && router.push(subItem.href)
+                    },
+                    className: `${
+                      currentPath === subItem.href
+                        ? 'selected-submenu-item'
+                        : ''
+                    }`,
+                  }
+                }
+              }),
+          }
+        : {
+            label: (
+              <span
+                className={`hover:text-primary-color text-[14px] ${
+                  currentPath === item.href
+                    ? 'text-[color:var(--primary-color)] selected-menu-item'
+                    : 'text-black'
+                } ml-[10px] inline-block`}
+              >
+                {item.title}
+              </span>
+            ),
+            key: item.key,
+            className: currentPath?.includes(item.href || '#')
+              ? '!bg-[#0291471a] !text-primary-color'
+              : '',
+            onClick: () => item.href && router.push(item.href),
+            ...(item.icon && {
+              icon: item.icon,
+            }),
+          }
+    })
+  }
+
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.classList.add('overflow-hidden')
+    } else {
+      document.body.classList.remove('overflow-hidden')
+    }
+  }, [isMobileMenuOpen])
+
   return isAuthenticated ? (
     <>
-      <nav className="pt-[10px] !w-full bg-white !font-normal">
-        <div className="mx-auto px-4 sm:px-6 lg:px-8">
-          {!isTablet ? (
-            <div>
-              <div className="mt-[10px] mb-[10px]">
-                <Image
-                  preview={false}
-                  alt="img-logo"
-                  src={'/assets/img/AZCPOS-WORD-LOGO-SCRAPT.jpg'}
-                  width={200}
-                  height={30}
-                />
-              </div>
-              <div className="flex justify-between">
-                <div className="flex mb-[10px]">
-                  {adminMenus?.map((menu: any) => {
-                    const showTab = checkShowTab(menu.key)
-
-                    if (!isAdmin && !showTab) return null
-                    return (
-                      <div key={menu.key}>
-                        <Link
-                          className={
-                            'flex  mr-[40px] text-[color:var(--text-color)] text-[18px]'
-                          }
-                          href={menu.href}
-                        >
-                          <div className={'flex content-center items-center'}>
-                            <span>{menu.title}</span>
-                          </div>
-                        </Link>
-                      </div>
-                    )
-                  })}
-                </div>
-                <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
-                  <a onClick={(e) => e.preventDefault()}>
-                    <div
-                      className={
-                        'flex flex-row items-center gap-3 cursor-pointer  text-[color:var(--text-color)]'
-                      }
-                    >
-                      <Svg name={'icon_avatar'} />
-                      {currentUser?.displayName}
-                      <Svg name={'expand-down'} width={14} height={7} />
-                    </div>
-                  </a>
-                </Dropdown>
-              </div>
-            </div>
-          ) : (
-            <div className="flex mb-[10px]">
-              <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-                {isMobileMenuOpen ? (
-                  <CloseOutlined className="text-xl" />
-                ) : (
-                  <MenuOutlined className="text-xl" />
-                )}
-              </button>
-              {isTablet && (
-                <div className="flex justify-center ml-[20px]">
+      {!isTablet ? (
+        <div className="!w-[250px] !bg-white">
+          <Sider className={'!bg-white !w-full !h-full'}>
+            <div
+              className={
+                'fixed left-0 top-0 bottom-0 hover:overflow-auto w-[250px]'
+              }
+            >
+              <Link href="/">
+                <div className={'px-5 flex cursor-pointer p-[10px]'}>
                   <Image
                     preview={false}
                     alt="img-logo"
-                    src={'/assets/img/AZCPOS-Logo-Web.png'}
-                    width={150}
-                    height={50}
+                    src={'/assets/img/icon-azcpos.png'}
                   />
                 </div>
-              )}
+              </Link>
+              <Menu mode="inline" openKeys={openKeys} items={renderMenus()} />
             </div>
-          )}
+          </Sider>
         </div>
-      </nav>
-
-      {isMobileMenuOpen && (
-        <nav className="fixed w-full h-full left-0 top-[70px] bottom-0 z-20 border border-t-[1px]">
-          <div
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="fixed top-[70px] right-0 bottom-0 w-[60%] bg-black opacity-30 z-10"
-          />
-          <div className="bg-white h-screen w-[40%]">
-            {adminMenus.map((menu: any) => {
-              const showTab = checkShowTab(menu.key)
-              if (!isAdmin && !showTab) return null
-              return (
-                <div key={menu.key}>
-                  <Link
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    href={menu.href}
-                    className={
-                      'flex justify-between p-3 text-[color:var(--text-color)] text-[16px]'
-                    }
-                  >
-                    <span>{menu.title}</span>
-                    <span className={'!mt-[-2px]'}>
-                      <RightOutlined />
-                    </span>
-                  </Link>
-                </div>
-              )
-            })}
-            <Divider className={'m-x-[4px]'} />
-            <Link
-              onClick={() => setIsMobileMenuOpen(false)}
-              href={'/admin/profile/assets'}
-              className={
-                'flex justify-between p-3 text-[color:var(--text-color)] text-[16px]'
-              }
-            >
-              <span>Assets</span>
-              <span className={'!mt-[-2px]'}>
-                <RightOutlined />
-              </span>
-            </Link>
-            <div
-              className={
-                'cursor-pointer hover:text-primary-color text-[16px] ml-[10px]'
-              }
-              onClick={logout}
-            >
-              Sign out
-            </div>
+      ) : (
+        <>
+          <div className="flex p-[10px] !bg-white">
+            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+              {isMobileMenuOpen ? (
+                <CloseOutlined className="text-xl" />
+              ) : (
+                <MenuOutlined className="text-xl" />
+              )}
+            </button>
+            {isTablet && (
+              <div className="flex justify-center ml-[20px]">
+                <Image
+                  preview={false}
+                  alt="img-logo"
+                  src={'/assets/img/icon-azcpos.png'}
+                  width={150}
+                  height={50}
+                />
+              </div>
+            )}
           </div>
-        </nav>
+          <nav
+            className={`fixed w-full h-full top-[70px] bottom-0 ${
+              !isMobileMenuOpen ? 'left-[-1000px]' : 'left-[0px]'
+            } z-20 border border-t-[1px] transition-all ease-in duration-600
+            `}
+          >
+            <div
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={`fixed top-[70px]  bottom-0 ${
+                !isMobileMenuOpen ? 'right-[-20px]' : 'w-[20%] right-0'
+              } transition-all ease-in bg-black opacity-30 z-10`}
+            />
+            <div className="bg-white w-[80%] h-screen">
+              <Menu
+                mode="inline"
+                openKeys={openKeys}
+                items={renderMenus()}
+                onClick={() => setIsMobileMenuOpen(false)}
+              />
+            </div>
+          </nav>
+        </>
       )}
     </>
   ) : (
-    <div
-      className={`flex ${isTablet ? 'justify-center' : 'pl-[60px]'}  bg-white`}
-    >
-      <div onClick={() => router.push('/')} className={'my-[10px]'}>
-        <Image
-          preview={false}
-          className="mb-[10px]"
-          alt="img-logo"
-          src={'/assets/img/AZCPOS-Logo-Web.png'}
-          width={isTablet ? 150 : 350}
-          height={isTablet ? 50 : 100}
-        />
-      </div>
-    </div>
+    <></>
   )
 }
 

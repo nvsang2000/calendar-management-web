@@ -22,106 +22,103 @@ const Login: React.FC = () => {
   }
 
   return !isAuthenticated ? (
-    <Row
-      className={s['login-container']}
-      justify={'center'}
-      align={'middle'}
-      style={{ height: '300px' }}
-    >
-      <Col span={24} style={{ textAlign: 'center' }}>
-        <h2
-          className={
-            'text-[24px] sm:text-[26px] md:text-[36px] lg-[36px] xl:text-[36px] text-[color:var(--green)] font-semibold pt-[20px] md:pt-[40px]'
-          }
-        >
-          Login
-        </h2>
-      </Col>
-      <Col
-        className={s['login-form']}
-        lg={14}
-        xs={22}
-        style={{ maxWidth: 512 }}
-      >
-        <Form
-          name="basic"
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          autoComplete="off"
-          layout={'vertical'}
-          colon={false}
-        >
-          <Form.Item
-            label={
-              <span
-                className={
-                  'text-[20px] sm:text-[24px] md:text-[30px] lg-[30px] xl:text-[20px] text-[color:var(--black)] font-medium'
-                }
-              >
-                Email / Phone / Username
-              </span>
+    <div className="">
+      <Row justify={'center'} align={'middle'} style={{ height: '300px' }}>
+        <Col span={24} style={{ textAlign: 'center' }}>
+          <h2
+            className={
+              'text-[24px] sm:text-[26px] md:text-[36px] lg-[36px] xl:text-[36px] text-[#029147] font-semibold pt-[20px] md:pt-[40px]'
             }
-            name="username"
           >
-            <Input size={'large'} />
-          </Form.Item>
-          <Form.Item
-            label={
-              <span
-                className={
-                  'text-[20px] sm:text-[24px] md:text-[30px] lg-[30px] xl:text-[20px] text-[color:var(--black)] font-medium'
-                }
-              >
-                Password
-              </span>
-            }
-            name="password"
+            Login
+          </h2>
+        </Col>
+        <Col
+          className={s['login-form']}
+          lg={14}
+          xs={22}
+          style={{ maxWidth: 512 }}
+        >
+          <Form
+            name="basic"
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
+            layout={'vertical'}
+            colon={false}
           >
-            <Input.Password size={'large'} />
-          </Form.Item>
-          <Col>
-            <p
-              style={{
-                cursor: 'pointer',
-                width: '8rem',
-                color: 'red',
-              }}
-              onClick={() => Router.push('/logout')}
-            >
-              Forgot password ?
-            </p>
-          </Col>
-          <Row gutter={20}>
-            <Col className={'grid place-content-center'}>
-              <Form.Item label={''} name={'remember'} noStyle>
-                <Checkbox defaultChecked={true} />
-              </Form.Item>
-            </Col>
-            <Col>
-              <b
-                className={
-                  'text-[20px] sm:text-[24px] md:text-[30px] lg-[30px] xl:text-[20px] text-[color:var(--black)] font-medium'
-                }
-              >
-                Remember for the next sign
-              </b>
-            </Col>
-          </Row>
-          <Form.Item>
-            <Button
-              className={
-                'mt-8 w-full !border !border-[color:var(--green)] hover:!bg-[var(--green)] !text-[color:var(--green)] !font-medium  hover:!text-white'
+            <Form.Item
+              label={
+                <span
+                  className={
+                    '!text-black text-[20px] sm:text-[24px] md:text-[30px] lg-[30px] xl:text-[20px] font-medium'
+                  }
+                >
+                  Email
+                </span>
               }
-              size={'large'}
-              loading={loading}
-              htmlType="submit"
+              name="username"
             >
-              Login
-            </Button>
-          </Form.Item>
-        </Form>
-      </Col>
-    </Row>
+              <Input size={'large'} />
+            </Form.Item>
+            <Form.Item
+              label={
+                <span
+                  className={
+                    'text-[20px] sm:text-[24px] md:text-[30px] lg-[30px] xl:text-[20px] !text-black  font-medium'
+                  }
+                >
+                  Password
+                </span>
+              }
+              name="password"
+            >
+              <Input.Password size={'large'} className='!bg-white' />
+            </Form.Item>
+            <Col>
+              <p
+                style={{
+                  cursor: 'pointer',
+                  width: '8rem',
+                  color: 'red',
+                }}
+                onClick={() => Router.push('/logout')}
+              >
+                Forgot password ?
+              </p>
+            </Col>
+            <Row gutter={20}>
+              <Col className={'grid place-content-center'}>
+                <Form.Item label={''} name={'remember'} noStyle>
+                  <Checkbox defaultChecked={true} />
+                </Form.Item>
+              </Col>
+              <Col>
+                <b
+                  className={
+                    'text-[20px] sm:text-[24px] md:text-[30px] lg-[30px] xl:text-[20px] !text-black  font-medium'
+                  }
+                >
+                  Remember for the next sign
+                </b>
+              </Col>
+            </Row>
+            <Form.Item>
+              <Button
+                className={
+                  'mt-8 w-full !border !border-[#029147] hover:!bg-[#029147] !text-[#029147] !font-medium  hover:!text-white'
+                }
+                size={'large'}
+                loading={loading}
+                htmlType="submit"
+              >
+                Login
+              </Button>
+            </Form.Item>
+          </Form>
+        </Col>
+      </Row>
+    </div>
   ) : (
     <SplashScreen />
   )

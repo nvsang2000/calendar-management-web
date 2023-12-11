@@ -1,0 +1,193 @@
+:root {
+  --primary-color: #029147;
+  --background-color: #f7f7f7;
+  --content-background-color: #f0f2f5;
+  --text-color: #4f4f4f;
+  --text-color-secondary: rgba(0, 0, 0, 0.45);
+  --table-header-color: #4f4f4f;
+  --green: #029147;
+  --yellow: #ff9914;
+  --dark-blue: #255072;
+  --black-bg: #292929;
+  --very-light-gray: #acaaaa;
+  --light-gray: #828282;
+  --background-gray: #e0e0e0;
+  --mid-gray: #c0bfbf;
+  --text-color-gray: #c9c9c9;
+  --black: #2d2e32;
+  --red: #d10014;
+  --light-red: #ff4d4f;
+  --border: #ccc9c9;
+  --nav-bar-text: #636363;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  background: var(--content-background-color);
+}
+
+a,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+  color: var(--text-color);
+}
+
+
+#root {
+  padding: 24px;
+}
+
+.ant-btn,
+.ant-menu .ant-menu-submenu-selected > .ant-menu-submenu-title {
+  border-radius: 8px;
+  color: var(--green);
+}
+
+.ant-switch.ant-switch-checked:hover:not(.ant-switch-disabled),
+.ant-switch.ant-switch-checked:not(.ant-switch-disabled),
+.ant-checkbox-wrapper:not(.ant-checkbox-wrapper-disabled):hover
+  .ant-checkbox-checked:not(.ant-checkbox-disabled)
+  .ant-checkbox-inner {
+  background-color: var(--green);
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: var(--green);
+}
+
+.ant-switch:hover:not(.ant-switch-disabled),
+.ant-switch:not(.ant-switch-disabled) {
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.ant-checkbox-wrapper:not(.ant-checkbox-wrapper-disabled):hover
+  .ant-checkbox-checked:not(.ant-checkbox-disabled)
+  .ant-checkbox-inner,
+.ant-checkbox-wrapper:not(.ant-checkbox-wrapper-disabled):hover
+  .ant-checkbox-inner,
+.ant-checkbox:not(.ant-checkbox-disabled):hover .ant-checkbox-inner,
+.ant-checkbox-checked .ant-checkbox-inner {
+  border-color: var(--green);
+}
+
+.ant-layout-header {
+  background: white;
+}
+
+.ant-modal-content {
+  border-radius: 8px !important;
+}
+
+input,
+.ant-input,
+.ant-select-selector,
+.ant-picker,
+.ant-input-number {
+  border-radius: 6px !important;
+}
+
+button {
+  color: var(--green);
+}
+.ql-toolbar.ql-snow {
+  border-top-right-radius: 6px !important;
+  border-top-left-radius: 6px !important;
+}
+
+.ant-table-container .ant-table-thead > tr > th {
+  background: white;
+}
+
+.ant-tabs-tab {
+  padding: 6px 0px;
+}
+
+.ant-tabs-ink-bar,
+.ant-tabs-ink-bar-animated {
+  height: 4px !important;
+  border-radius: 10px;
+}
+
+.ant-tabs .ant-tabs-tab-btn {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 21px;
+}
+.ant-message-custom-content {
+  display: flex;
+  align-items: center;
+}
+
+.policy-form .ant-table-thead tr th {
+  padding: 8px !important;
+}
+
+.ant-table table {
+  border-collapse: collapse;
+}
+
+.ant-form
+  .ant-form-item-label
+  .label
+  .ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
+  display: none;
+}
+.ant-form
+  .ant-form-item-label
+  > label.ant-form-item-required:not(
+    .ant-form-item-required-mark-optional
+  )::after {
+  display: inline-block;
+  color: var(--light-red);
+  font-size: 14px;
+  font-family: SimSun, sans-serif;
+  line-height: 1;
+  content: '*';
+}
+
+.ant-select-disabled.ant-select:not(.ant-select-customize-input)
+  .ant-select-selector {
+  background-color: rgba(250, 250, 250, 0.6);
+  color: var(--black);
+  cursor: not-allowed;
+}
+.ant-input-disabled,
+.ant-input[disabled] {
+  background-color: rgba(250, 250, 250, 0.6);
+  color: var(--black);
+  cursor: not-allowed;
+}
+.ant-input-number-disabled {
+  background-color: rgba(250, 250, 250, 0.6);
+  color: var(--black);
+  cursor: not-allowed;
+}
+.quill > .ql-container > .ql-editor.ql-blank::before {
+  font-size: 14px;
+  font-weight: 400;
+  font-style: normal;
+  color: #bfbfbf;
+}
+.quill > .ql-container {
+  min-height: 18rem;
+}
+.ant-table-cell-fix-left,
+.ant-table-cell-fix-right {
+  background-color: white !important;
+}
+.ant-picker-range-separator {
+  transform: translateY(-4px);
+}
+
+.ant-pagination-simple .ant-pagination-simple-pager input {
+  height: 90%;
+}
