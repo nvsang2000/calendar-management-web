@@ -196,7 +196,7 @@ export default Users
 export async function getServerSideProps() {
   return {
     props: {
-      pageKey: '(Users)',
+      pageKey: '(User)',
       requiredRoles: [],
     },
   }

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+
+      form {
+        max-width: 600px;
+        margin: auto;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      input[type='text'],
+      textarea {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 16px;
+        box-sizing: border-box;
+      }
+
+      input[type='checkbox'] {
+        margin-right: 8px;
+      }
+
+      button {
+        padding: 10px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      .error-message {
+        color: red;
+        margin-top: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <form id="myForm">
+      <label for="textbox">Textbox:</label>
+      <input type="text" id="textbox" name="textbox" placeholder="Enter text" />
+      <div id="textbox-error" class="error-message"></div>
+
+      <label for="textarea">Textarea:</label>
+      <textarea
+        id="textarea"
+        name="textarea"
+        placeholder="Enter text"
+      ></textarea>
+      <div id="textarea-error" class="error-message"></div>
+
+      <label for="checkbox">Checkbox:</label>
+      <input type="checkbox" id="checkbox" name="checkbox" />
+      <label for="checkbox">Check me</label>
+
+      <button type="button" onclick="validateForm()">Submit</button>
+    </form>
+    <iframe
+      src="http://localhost:3000/admin/forms/create"
+      height="1000"
+      width="1000"
+      title="Iframe Example"
+    ></iframe>
+
+    <script>
+      function validateForm() {
+        // Reset thông báo lỗi trước khi kiểm tra
+        resetErrorMessages()
+
+        var textboxValue = document.getElementById('textbox').value
+        var textareaValue = document.getElementById('textarea').value
+
+        // Kiểm tra nếu các giá trị trống và hiển thị thông báo lỗi
+        if (textboxValue.trim() === '') {
+          showError('textbox-error', 'Không được để trống trường này')
+        }
+
+        if (textareaValue.trim() === '') {
+          showError('textarea-error', 'Không được để trống trường này')
+        }
+
+        // Kiểm tra nếu có thông báo lỗi, không submit form
+        if (
+          document.querySelectorAll('.error-message:not(:empty)').length > 0
+        ) {
+          return
+        }
+
+        // Làm gì đó với giá trị khi hợp lệ
+        submitForm()
+      }
+
+      function submitForm() {
+        var form = document.getElementById('myForm')
+        var formData = new FormData(form)
+
+        // Thay thế 'YOUR_URL' bằng URL của bạn
+        fetch('YOUR_URL', {
+          method: 'POST',
+          body: formData,
+        })
+          .then((response) => {
+            // Xử lý phản hồi từ server nếu cần
+            console.log('Submit successful')
+          })
+          .catch((error) => {
+            console.error('Submit failed', error)
+          })
+      }
+
+      function showError(elementId, message) {
+        var errorElement = document.getElementById(elementId)
+        errorElement.innerText = message
+      }
+
+      function resetErrorMessages() {
+        var errorElements = document.querySelectorAll('.error-message')
+        errorElements.forEach(function (element) {
+          element.innerText = ''
+        })
+      }
+    </script>
+  </body>
+</html>

@@ -63,6 +63,17 @@ export const updateStaffApi = (id: string, params: any) =>
 export const createStaffApi = (params: any) =>
   axiosInstance.post('/staffs', params)
 
+// API group
+export const getAllGroupApi = (payload: FetchDto) =>
+  axiosInstance.get(`/groups?${queryString.stringify(payload)}`)
+export const getGroupApi = (id: string) => axiosInstance.get(`/groups/${id}`)
+export const deleteGroupApi = (id: string) =>
+  axiosInstance.delete(`/groups/${id}`)
+export const updateGroupApi = (id: string, params: any) =>
+  axiosInstance.put(`/groups/${id}`, params)
+export const createGroupApi = (params: any) =>
+  axiosInstance.post('/groups', params)
+
 export const uploadImage = async (file: File) => {
   const formData = new FormData()
   formData.append('image', file)

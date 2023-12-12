@@ -8,11 +8,13 @@ import PolicyForm from './PolicyForm'
 import FormLabel from './FormLabel'
 import PolicySelect from './PolicySelect'
 import Header from './Header'
+import FormTemplate from './FormTemplate'
 
 export {
   Svg,
   Header,
   DefaultLayout,
+  FormTemplate,
   CustomSider,
   FormLabel,
   AlertMessage,

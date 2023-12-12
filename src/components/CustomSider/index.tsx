@@ -21,7 +21,7 @@ const menus: MenuItem[] = [
   {
     key: '(Dashboard)',
     title: 'Dashboard',
-    icon: <Svg name={'dashboard'} fill={'var(--primary-color)'} />,
+    icon: <Svg name={'ic_dashboard'} fill={'var(--primary-color)'} />,
     href: '/admin',
   },
   {
@@ -44,7 +44,7 @@ const menus: MenuItem[] = [
   {
     key: '(Staff)(Group)',
     title: 'Manager Staffs',
-    icon: <Svg name={'users'} fill={'var(--primary-color)'} />,
+    icon: <Svg name={'ic_group'} fill={'var(--primary-color)'} />,
     submenu: [
       {
         key: '(Staff)',
@@ -59,15 +59,27 @@ const menus: MenuItem[] = [
     ],
   },
   {
+    key: '(Form)',
+    title: 'Manager Forms',
+    icon: <Svg name={'ic_form'} fill={'var(--primary-color)'} />,
+    href: '/admin/forms',
+  },
+  {
+    key: '(Calendar)',
+    title: 'Manager Calendars',
+    icon: <Svg name={'ic_calendar'} fill={'var(--primary-color)'} />,
+    href: '/admin/calendars',
+  },
+  {
     key: '(Profile)',
     title: 'Profile Me',
-    icon: <Svg name={'avatar'} fill={'var(--primary-color)'} />,
+    icon: <Svg name={'ic_avatar'} fill={'var(--primary-color)'} />,
     href: '/admin/profile',
     submenu: [
       {
         key: '(Profile)(Infor)',
         title: 'Information',
-        href: '/admin/profile/infor',
+        href: '/admin/profile',
       },
       {
         key: '(Profile)(Logout)',
@@ -99,6 +111,15 @@ const CustomSider = ({}) => {
       },
       '/admin/policies': function () {
         return '(User)(Policy)'
+      },
+      '/admin/staffs': function () {
+        return '(Staff)(Group)'
+      },
+      '/admin/groups': function () {
+        return '(Staff)(Group)'
+      },
+      '/admin/profile': function () {
+        return '(Profile)(Infor)'
       },
       default: function () {
         return '()'
@@ -198,7 +219,7 @@ const CustomSider = ({}) => {
             ),
             key: item.key,
             className: currentPath?.includes(item.href || '#')
-              ? '!bg-[#0291471a] !text-primary-color'
+              ? '!text-primary-color'
               : '',
             onClick: () => item.href && router.push(item.href),
             ...(item.icon && {
@@ -261,17 +282,17 @@ const CustomSider = ({}) => {
           </div>
           <nav
             className={`fixed bottom-0 top-[70px] h-full w-full ${
-              !isMobileMenuOpen ? 'left-[-1000px]' : 'left-[0px]'
+              !isMobileMenuOpen ? 'left-[-800px]' : 'left-[0px]'
             } duration-600 z-20 border border-t-[1px] transition-all ease-in
             `}
           >
             <div
               onClick={() => setIsMobileMenuOpen(false)}
               className={`fixed bottom-0  top-[70px] ${
-                !isMobileMenuOpen ? 'right-[-20px]' : 'right-0 w-[20%]'
+                !isMobileMenuOpen ? 'right-[-20px]' : 'right-0 w-[30%]'
               } z-10 bg-black opacity-30 transition-all ease-in`}
             />
-            <div className="h-screen w-[80%] bg-white">
+            <div className="h-screen w-[70%] bg-white">
               <Menu
                 mode="inline"
                 openKeys={openKeys}

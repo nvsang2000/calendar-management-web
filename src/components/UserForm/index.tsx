@@ -38,8 +38,6 @@ export default function UserForm({
     }
   }, [form, initialValues])
 
-  console.log('isAdmin', isAdmin)
-
   const renderPasswordForm = () => {
     return (
       <>

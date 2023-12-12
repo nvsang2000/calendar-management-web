@@ -43,6 +43,15 @@ h6 {
   padding: 24px;
 }
 
+:where(.css-dev-only-do-not-override-6j9yrn).ant-menu-light
+  .ant-menu-submenu-selected
+  > .ant-menu-submenu-title,
+:where(.css-dev-only-do-not-override-6j9yrn).ant-menu-light
+  > .ant-menu
+  .ant-menu-submenu-selected
+  > .ant-menu-submenu-title {
+  color: var(--green);
+}
 
 .ant-layout-header {
   background: white;
@@ -150,6 +159,7 @@ input,
   transform: translateY(-4px);
 }
 
-.css-dev-only-do-not-override-1v0edce.ant-pagination.ant-pagination-mini .ant-pagination-simple-pager {
+.css-dev-only-do-not-override-1v0edce.ant-pagination.ant-pagination-mini
+  .ant-pagination-simple-pager {
   height: 21px;
 }
