@@ -1,14 +1,12 @@
-import { Divider, Image, Layout, Menu } from 'antd'
+import { Image, Layout, Menu } from 'antd'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import React, { useCallback, useState, useEffect, useMemo } from 'react'
-import { parseSafe } from '~/helpers'
-import { useAuth, useDevice, useSettings } from '~/hooks'
+import React, { useCallback, useState, useEffect } from 'react'
+import { useAuth, useDevice } from '~/hooks'
 import Svg from '../Svg'
-import { MenuOutlined, CloseOutlined, RightOutlined } from '@ant-design/icons'
+import { MenuOutlined, CloseOutlined } from '@ant-design/icons'
 import { ROLE_ADMIN } from '~/constants'
 
-const { SubMenu } = Menu
 const { Sider } = Layout
 
 interface MenuItem {
@@ -51,12 +49,12 @@ const menus: MenuItem[] = [
       {
         key: '(Staff)',
         title: 'Staffs',
-        href: '/admin/users',
+        href: '/admin/staffs',
       },
       {
         key: '(Group)',
         title: 'Groups',
-        href: '/admin/policies',
+        href: '/admin/groups',
       },
     ],
   },
@@ -86,25 +84,13 @@ const CustomSider = ({}) => {
   const { isTablet } = useDevice()
   const [openKeys, setOpenKeys] = useState<string[]>([])
   const { currentUser, isAuthenticated, logout } = useAuth()
-  const { settings } = useSettings()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const isAdmin = ROLE_ADMIN.includes(currentUser?.role)
-
-  const blacklistFeatures = useMemo(() => {
-    const { blacklistFeatures } = settings || {}
-
-    return parseSafe(blacklistFeatures || '{}')
-  }, [settings])
 
   const adminMenus: any[] = [
     ...menus,
     // ...(isAdmin ? listMenuAdmin : []),
-  ].filter(
-    (i: any) =>
-      i &&
-      Object.keys(blacklistFeatures).findIndex((item) =>
-        item.includes(i?.key),
-      ) < 0,
-  ) as MenuItem[]
+  ].filter((i: any) => i) as MenuItem[]
 
   const getSelectedSubmenu = useCallback(() => {
     const keys: { [key: string]: () => string } = {
@@ -155,7 +141,7 @@ const CustomSider = ({}) => {
       return item?.submenu
         ? {
             label: (
-              <span className={`text-[14px] ml-[10px] inline-block text-black`}>
+              <span className={`ml-[10px] inline-block text-[14px] text-black`}>
                 {item.title}
               </span>
             ),
@@ -174,7 +160,7 @@ const CustomSider = ({}) => {
                     label: (
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         <span
-                          className={`hover:text-primary-color ml-[4px] text-[14px] inline-block ${
+                          className={`ml-[4px] inline-block text-[14px] hover:text-primary-color ${
                             currentPath === subItem.href
                               ? 'text-primary-color'
                               : 'text-black'
@@ -201,9 +187,9 @@ const CustomSider = ({}) => {
         : {
             label: (
               <span
-                className={`hover:text-primary-color text-[14px] ${
+                className={`text-[14px] hover:text-primary-color ${
                   currentPath === item.href
-                    ? 'text-[color:var(--primary-color)] selected-menu-item'
+                    ? 'selected-menu-item text-[color:var(--primary-color)]'
                     : 'text-black'
                 } ml-[10px] inline-block`}
               >
@@ -222,7 +208,6 @@ const CustomSider = ({}) => {
     })
   }
 
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.classList.add('overflow-hidden')
@@ -235,14 +220,12 @@ const CustomSider = ({}) => {
     <>
       {!isTablet ? (
         <div className="!w-[250px] !bg-white">
-          <Sider className={'!bg-white !w-full !h-full'}>
+          <Sider className={'!h-full !w-full !bg-white'}>
             <div
-              className={
-                'fixed left-0 top-0 bottom-0 hover:overflow-auto w-[250px]'
-              }
+              className={'fixed inset-y-0 left-0 w-[250px] hover:overflow-auto'}
             >
               <Link href="/">
-                <div className={'px-5 flex cursor-pointer p-[10px]'}>
+                <div className={'flex cursor-pointer p-[10px] px-5'}>
                   <Image
                     preview={false}
                     alt="img-logo"
@@ -256,7 +239,7 @@ const CustomSider = ({}) => {
         </div>
       ) : (
         <>
-          <div className="flex p-[10px] !bg-white">
+          <div className="flex !bg-white p-[10px]">
             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
               {isMobileMenuOpen ? (
                 <CloseOutlined className="text-xl" />
@@ -265,7 +248,7 @@ const CustomSider = ({}) => {
               )}
             </button>
             {isTablet && (
-              <div className="flex justify-center ml-[20px]">
+              <div className="ml-[20px] flex justify-center">
                 <Image
                   preview={false}
                   alt="img-logo"
@@ -277,18 +260,18 @@ const CustomSider = ({}) => {
             )}
           </div>
           <nav
-            className={`fixed w-full h-full top-[70px] bottom-0 ${
+            className={`fixed bottom-0 top-[70px] h-full w-full ${
               !isMobileMenuOpen ? 'left-[-1000px]' : 'left-[0px]'
-            } z-20 border border-t-[1px] transition-all ease-in duration-600
+            } duration-600 z-20 border border-t-[1px] transition-all ease-in
             `}
           >
             <div
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`fixed top-[70px]  bottom-0 ${
-                !isMobileMenuOpen ? 'right-[-20px]' : 'w-[20%] right-0'
-              } transition-all ease-in bg-black opacity-30 z-10`}
+              className={`fixed bottom-0  top-[70px] ${
+                !isMobileMenuOpen ? 'right-[-20px]' : 'right-0 w-[20%]'
+              } z-10 bg-black opacity-30 transition-all ease-in`}
             />
-            <div className="bg-white w-[80%] h-screen">
+            <div className="h-screen w-[80%] bg-white">
               <Menu
                 mode="inline"
                 openKeys={openKeys}

@@ -5,7 +5,6 @@ import UsersForm from './UserForm'
 import CustomUpload from './CustomUpload'
 import AlertMessage from './AlertMessage'
 import PolicyForm from './PolicyForm'
-import CategorySelect from './CategorySelect'
 import FormLabel from './FormLabel'
 import PolicySelect from './PolicySelect'
 import Header from './Header'
@@ -16,7 +15,6 @@ export {
   DefaultLayout,
   CustomSider,
   FormLabel,
-  CategorySelect,
   AlertMessage,
   UsersForm,
   CustomUpload,

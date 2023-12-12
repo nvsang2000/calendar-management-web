@@ -27,7 +27,7 @@ const Login: React.FC = () => {
         <Col span={24} style={{ textAlign: 'center' }}>
           <h2
             className={
-              'text-[24px] sm:text-[26px] md:text-[36px] lg-[36px] xl:text-[36px] text-[#029147] font-semibold pt-[20px] md:pt-[40px]'
+              'lg-[36px] pt-[20px] text-[24px] font-semibold text-[#029147] sm:text-[26px] md:pt-[40px] md:text-[36px] xl:text-[36px]'
             }
           >
             Login
@@ -51,7 +51,7 @@ const Login: React.FC = () => {
               label={
                 <span
                   className={
-                    '!text-black text-[20px] sm:text-[24px] md:text-[30px] lg-[30px] xl:text-[20px] font-medium'
+                    'lg-[30px] text-[20px] font-medium !text-black sm:text-[24px] md:text-[30px] xl:text-[20px]'
                   }
                 >
                   Email
@@ -65,7 +65,7 @@ const Login: React.FC = () => {
               label={
                 <span
                   className={
-                    'text-[20px] sm:text-[24px] md:text-[30px] lg-[30px] xl:text-[20px] !text-black  font-medium'
+                    'lg-[30px] text-[20px] font-medium !text-black sm:text-[24px] md:text-[30px]  xl:text-[20px]'
                   }
                 >
                   Password
@@ -73,7 +73,7 @@ const Login: React.FC = () => {
               }
               name="password"
             >
-              <Input.Password size={'large'} className='!bg-white' />
+              <Input.Password size={'large'} className="!bg-white" />
             </Form.Item>
             <Col>
               <p
@@ -96,7 +96,7 @@ const Login: React.FC = () => {
               <Col>
                 <b
                   className={
-                    'text-[20px] sm:text-[24px] md:text-[30px] lg-[30px] xl:text-[20px] !text-black  font-medium'
+                    'lg-[30px] text-[20px] font-medium !text-black sm:text-[24px] md:text-[30px]  xl:text-[20px]'
                   }
                 >
                   Remember for the next sign
@@ -106,7 +106,7 @@ const Login: React.FC = () => {
             <Form.Item>
               <Button
                 className={
-                  'mt-8 w-full !border !border-[#029147] hover:!bg-[#029147] !text-[#029147] !font-medium  hover:!text-white'
+                  'mt-8 w-full !border !border-[#029147] !font-medium !text-[#029147] hover:!bg-[#029147]  hover:!text-white'
                 }
                 size={'large'}
                 loading={loading}

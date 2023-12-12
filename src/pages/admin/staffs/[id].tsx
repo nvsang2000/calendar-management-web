@@ -1,17 +1,16 @@
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
+import UserForm from '~/components/UserForm'
 import { message } from 'antd'
-import { createPolicyApi, getPolicyApi, updatePolicyApi } from '~/services/apis'
-import PolicyForm from '~/components/PolicyForm'
-import { isNil } from 'lodash'
+import {
+  createUserApi,
+  deleteUserApi,
+  getUserApi,
+  updateUserApi,
+} from '~/services/apis'
+import { ROLE } from '~/constants'
 
-interface Permission {
-  id?: number
-  action: string
-  subject: string
-}
-
-export default function PolicyPage() {
+export default function UserPage() {
   const router = useRouter()
   const [loading, setLoading] = useState<boolean>(false)
   const id = router.query.id + ''
@@ -20,20 +19,12 @@ export default function PolicyPage() {
   useEffect(() => {
     if (id && id !== 'create') {
       const hideLoading = message.loading('Retrieving data.....')
-      getPolicyApi(+id)
+      getUserApi(id)
         .then((res) => {
-          const policy = res?.data
-          const permissions: any = {}
-
-          res?.data?.permissions?.map((permission: Permission) => {
-            permissions[`${permission.action}_${permission.subject}`] =
-              permission
-          })
-
-          if (policy) {
+          const user = res?.data
+          if (user) {
             setInitialValues({
-              ...policy,
-              permissions,
+              ...user,
             })
           }
         })
@@ -44,20 +35,23 @@ export default function PolicyPage() {
   }, [id])
 
   const handleSubmit = async (values: any) => {
+    const role = values?.policyId ? ROLE.user : values?.role
     const submitValues = {
       ...values,
-      permissions: (Object.values(values.permissions) || []).filter(
-        (i) => !isNil(i),
-      ),
+      role,
+      policyId: role !== ROLE.admin ? values?.policyId : undefined,
     }
+
+    console.log('submitValues', submitValues)
+
     const hideMessage = message.loading('')
     setLoading(true)
     try {
       if (id && id !== 'create') {
-        await updatePolicyApi(+id, submitValues)
+        await updateUserApi(id, submitValues)
         message.success('Update successful!')
       } else {
-        await createPolicyApi(submitValues)
+        await createUserApi(submitValues)
         message.success('Create new successful!')
       }
 
@@ -70,22 +64,31 @@ export default function PolicyPage() {
     }
   }
 
+  const handleRemoveUser = async (id: string) => {
+    try {
+      await deleteUserApi(id)
+      message.success('Remove user successful!')
+      router.back()
+    } catch (e: any) {
+      console.log(e.message)
+    }
+  }
+
   return (
-    <div className={'container rounded-[10px] bg-white p-10'}>
-      <PolicyForm
-        id={id !== 'create' ? id : undefined}
-        initialValues={initialValues}
-        onSubmit={handleSubmit}
-        loading={loading}
-      />
-    </div>
+    <UserForm
+      id={id !== 'create' ? id : undefined}
+      initialValues={initialValues}
+      onSubmit={handleSubmit}
+      onRemove={handleRemoveUser}
+      loading={loading}
+    />
   )
 }
 
 export async function getServerSideProps() {
   return {
     props: {
-      pageKey: '(Policies)',
+      pageKey: '(Users)',
       requiredRoles: [],
     },
   }

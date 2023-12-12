@@ -7,10 +7,10 @@ import { localStorageProvider } from '~/helpers'
 import DefaultLayout from '~/components/DefaultLayout'
 import nextCookies from 'next-cookies'
 import { AuthProvider } from '~/contexts/auth'
-import { SettingsProvider } from '~/contexts/settings'
 import getConfig from 'next/config'
-import { ConfigProvider, theme } from 'antd'
 import { StyleProvider } from '@ant-design/cssinjs'
+import { ConfigProvider, theme } from 'antd'
+import { THEME_DEFAULD } from '~/constants'
 
 const routesNoNeedAuth = ['/login']
 const routesNoNeedDefaultLayout = ['/admin/orders/print']
@@ -29,19 +29,21 @@ function MyApp({
 
   return (
     <SWRConfig value={{ provider: localStorageProvider }}>
-      <SettingsProvider>
-        <AuthProvider>
-          {/* @ts-ignore */}
+      <AuthProvider>
+        {/* @ts-ignore */}
 
-          <DefaultLayout
-            currentUser={currentUser}
-            globalSettings={globalSettings}
-            pageProps={pageProps}
-          >
-             <Component />
-          </DefaultLayout>
-        </AuthProvider>
-      </SettingsProvider>
+        <DefaultLayout
+          currentUser={currentUser}
+          globalSettings={globalSettings}
+          pageProps={pageProps}
+        >
+          <StyleProvider hashPriority="high">
+            <ConfigProvider theme={{ ...THEME_DEFAULD }}>
+              <Component />
+            </ConfigProvider>
+          </StyleProvider>
+        </DefaultLayout>
+      </AuthProvider>
     </SWRConfig>
   )
 }

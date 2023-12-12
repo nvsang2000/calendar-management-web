@@ -25,7 +25,6 @@ html,
 body {
   padding: 0;
   margin: 0;
-  background: var(--content-background-color);
 }
 
 a,
@@ -38,46 +37,12 @@ h5,
 h6 {
   font-size: inherit;
   font-weight: inherit;
-  color: var(--text-color);
 }
-
 
 #root {
   padding: 24px;
 }
 
-.ant-btn,
-.ant-menu .ant-menu-submenu-selected > .ant-menu-submenu-title {
-  border-radius: 8px;
-  color: var(--green);
-}
-
-.ant-switch.ant-switch-checked:hover:not(.ant-switch-disabled),
-.ant-switch.ant-switch-checked:not(.ant-switch-disabled),
-.ant-checkbox-wrapper:not(.ant-checkbox-wrapper-disabled):hover
-  .ant-checkbox-checked:not(.ant-checkbox-disabled)
-  .ant-checkbox-inner {
-  background-color: var(--green);
-}
-
-.ant-checkbox-checked .ant-checkbox-inner {
-  background-color: var(--green);
-}
-
-.ant-switch:hover:not(.ant-switch-disabled),
-.ant-switch:not(.ant-switch-disabled) {
-  background: rgba(0, 0, 0, 0.45);
-}
-
-.ant-checkbox-wrapper:not(.ant-checkbox-wrapper-disabled):hover
-  .ant-checkbox-checked:not(.ant-checkbox-disabled)
-  .ant-checkbox-inner,
-.ant-checkbox-wrapper:not(.ant-checkbox-wrapper-disabled):hover
-  .ant-checkbox-inner,
-.ant-checkbox:not(.ant-checkbox-disabled):hover .ant-checkbox-inner,
-.ant-checkbox-checked .ant-checkbox-inner {
-  border-color: var(--green);
-}
 
 .ant-layout-header {
   background: white;
@@ -95,9 +60,6 @@ input,
   border-radius: 6px !important;
 }
 
-button {
-  color: var(--green);
-}
 .ql-toolbar.ql-snow {
   border-top-right-radius: 6px !important;
   border-top-left-radius: 6px !important;
@@ -188,6 +150,6 @@ button {
   transform: translateY(-4px);
 }
 
-.ant-pagination-simple .ant-pagination-simple-pager input {
-  height: 90%;
+.css-dev-only-do-not-override-1v0edce.ant-pagination.ant-pagination-mini .ant-pagination-simple-pager {
+  height: 21px;
 }

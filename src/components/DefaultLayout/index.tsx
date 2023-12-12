@@ -63,15 +63,13 @@ const DefaultLayout: React.FC = ({
       <Layout className={'relative '} style={{ minHeight: '100vh' }}>
         <CustomSider />
         <Layout className="site-layout">
-          <Content
-            className={'mt-[10px] relative !-z-0 p-[20px]'}
-          >
+          <Content className={'relative !-z-0 mt-[10px] p-[20px]'}>
             {isAccessable() ? (
               children
             ) : (
               <div
                 className={
-                  'bg-white !text-black rounded-[8px] grid place-content-center min-h-[300px] text-[15px]'
+                  'grid min-h-[300px] place-content-center rounded-[8px] bg-white text-[15px] !text-black'
                 }
               >
                 {

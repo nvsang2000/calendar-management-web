@@ -85,7 +85,7 @@ function Policies({}) {
             <div className={'flex justify-between'}>
               <div
                 onClick={() => redirectPolicies(item)}
-                className="text-black text-[18px] capitalize cursor-pointer"
+                className="cursor-pointer text-[18px] capitalize text-black"
               >
                 {item.name}
               </div>
@@ -95,7 +95,7 @@ function Policies({}) {
             <>
               <div
                 className={
-                  'text-[color:var(--text-color)] font-normal text-[13px] sm:text-[14px] md:text-[16px] lg-[16px] xl:text-[16px]'
+                  'lg-[16px] text-[13px] font-normal text-[color:var(--text-color)] sm:text-[14px] md:text-[16px] xl:text-[16px]'
                 }
               >
                 Date Created:{' '}
@@ -113,7 +113,7 @@ function Policies({}) {
       <Head>
         <title>Policies</title>
       </Head>
-      <div className={'bg-white p-[20px] rounded-[8px] mb-[20px]'}>
+      <div className={'mb-[20px] rounded-[8px] bg-white p-[20px]'}>
         <Row gutter={20} className={'mb-[8px]'}>
           <Col flex={1}>
             <div className={'text-[18px] font-medium'}>
@@ -154,19 +154,6 @@ function Policies({}) {
                     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
                   }}
                   showSizeChanger={true}
-                />
-                <Select
-                  size="small"
-                  showArrow
-                  value={params?.limit}
-                  options={PAGE_SIZE_OPTION?.map((size: number) => ({
-                    value: size,
-                    lable: size,
-                  }))}
-                  onChange={(value: any) => {
-                    setParams({ limit: value })
-                    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-                  }}
                 />
               </Col>
             </Row>

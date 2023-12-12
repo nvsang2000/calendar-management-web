@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useRef, useState } from 'react'
-import { Upload, Button, Modal } from 'antd'
+import { Upload, Button, Modal, Image } from 'antd'
 import {
   UploadOutlined,
   PlusOutlined,
@@ -142,7 +142,7 @@ export default function CustomUpload({
         footer={null}
         onCancel={() => setPreview({ visible: false, image: '' })}
       >
-        <img
+        <Image
           alt="example"
           style={{
             width: '100%',

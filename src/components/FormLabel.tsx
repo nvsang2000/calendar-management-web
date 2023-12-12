@@ -38,7 +38,7 @@ export default function FormLabel({
             name={'ic_copy'}
             width={24}
             height={24}
-            className={'opacity-80 cursor-pointer ml-[10px]'}
+            className={'ml-[10px] cursor-pointer opacity-80'}
             onClick={() => {
               navigator.clipboard.writeText(valueCoppy)
               message.open({
@@ -53,12 +53,13 @@ export default function FormLabel({
             target="_blank"
             className={'text-[color:var(--text-color)]'}
             href={valueDirect}
+            rel="noreferrer"
           >
             <Svg
               name={'ic_direct'}
               width={16}
               height={16}
-              className={'opacity-80 cursor-pointer ml-[10px]'}
+              className={'ml-[10px] cursor-pointer opacity-80'}
             />
           </a>
         )}

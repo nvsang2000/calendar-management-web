@@ -12,11 +12,11 @@ const CustomHeader: React.FC = ({}) => {
   if (!isAuthenticated) {
     return (
       <Header
-        className={'h-[115px] !bg-[color:var(--green)] flex items-center'}
+        className={'flex h-[115px] items-center !bg-[color:var(--green)]'}
       >
         <div
           onClick={() => router.push('/')}
-          className={'text-white text-[36px] font-bold cursor-pointer'}
+          className={'cursor-pointer text-[36px] font-bold text-white'}
         >
           Foodmap <span className={'font-light'}>Insights</span>
         </div>
@@ -26,16 +26,16 @@ const CustomHeader: React.FC = ({}) => {
     return (
       <div
         className={
-          'flex justify-between p-[25px] pt-[10px] w-full h-[68px] bg-white border-[1px] rounded-br-[10px]'
+          'flex h-[68px] w-full justify-between rounded-br-[10px] border-[1px] bg-white p-[25px] pt-[10px]'
         }
       >
         <div></div>
         <div>
-          <div className={'flex flex-row gap-5 items-center'}>
+          <div className={'flex flex-row items-center gap-5'}>
             <div className={'flex flex-col text-right'}>
               <div
                 className={
-                  'font-medium text-[18px] text-[color:var(--black)] leading-[21px]'
+                  'text-[18px] font-medium leading-[21px] text-[color:var(--black)]'
                 }
               >
                 {currentUser?.displayName} /{' '}
@@ -45,13 +45,13 @@ const CustomHeader: React.FC = ({}) => {
               </div>
               <div
                 className={
-                  'font-medium text-[14px] text-[color:var(--light-gray)] leading-[16px]'
+                  'text-[14px] font-medium leading-[16px] text-[color:var(--light-gray)]'
                 }
               >
                 {currentUser?.email}
               </div>
             </div>
-            <div className={'flex flex-row items-center gap-3 cursor-pointer'}>
+            <div className={'flex cursor-pointer flex-row items-center gap-3'}>
               <Popover
                 placement="bottomRight"
                 title={
@@ -63,11 +63,11 @@ const CustomHeader: React.FC = ({}) => {
                   <div>
                     <div
                       className={
-                        'flex items-center gap-[4px] mx-[8px] cursor-pointer hover:text-primary-color'
+                        'mx-[8px] flex cursor-pointer items-center gap-[4px] hover:text-primary-color'
                       }
                       onClick={() => router.push('/admin/account')}
                     >
-                      <div className={'w-[30px] h-[30px] flex items-center'}>
+                      <div className={'flex h-[30px] w-[30px] items-center'}>
                         <Svg
                           name={'users'}
                           width={20}
@@ -79,11 +79,11 @@ const CustomHeader: React.FC = ({}) => {
                     </div>
                     <div
                       className={
-                        'flex items-center gap-[4px] mx-[8px] cursor-pointer hover:text-primary-color'
+                        'mx-[8px] flex cursor-pointer items-center gap-[4px] hover:text-primary-color'
                       }
                       onClick={logout}
                     >
-                      <div className={'w-[30px] h-[30px] flex items-center'}>
+                      <div className={'flex h-[30px] w-[30px] items-center'}>
                         <Svg
                           name={'exit'}
                           width={24}
@@ -96,7 +96,7 @@ const CustomHeader: React.FC = ({}) => {
                   </div>
                 }
                 trigger="click"
-                className={'flex flex-row items-center gap-3 cursor-pointer'}
+                className={'flex cursor-pointer flex-row items-center gap-3'}
               >
                 <Svg name={'avatar'} width={40} height={40} />
                 <Svg name={'expand-down'} width={14} height={7} />

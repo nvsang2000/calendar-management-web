@@ -90,7 +90,7 @@ export default function PolicyForm({
           className={'!border !border-[color:var(--@very-light-gray)] p-[10px]'}
           title={
             <div>
-              <div className="text-black text-[18px] capitalize cursor-pointer">
+              <div className="cursor-pointer text-[18px] capitalize text-black">
                 {item?.subject}
               </div>
             </div>
@@ -102,7 +102,7 @@ export default function PolicyForm({
                   <div key={key}>
                     <Row gutter={40}>
                       <Col xs={12} md={12} xl={12}>
-                        <span className={'text-black text-[16px] '}>
+                        <span className={'text-[16px] text-black '}>
                           {title}
                         </span>
                       </Col>
@@ -143,7 +143,7 @@ export default function PolicyForm({
               })}
               <Row gutter={40}>
                 <Col xs={12} md={12} xl={12}>
-                  <span className={'text-black text-[16px]'}>All</span>
+                  <span className={'text-[16px] text-black'}>All</span>
                 </Col>
                 <Col xs={12} md={12} xl={12}>
                   <Checkbox
@@ -186,7 +186,7 @@ export default function PolicyForm({
 
   return (
     <div className={'policy-form'}>
-      <div className={'flex items-center mb-[10px] '}>
+      <div className={'mb-[10px] flex items-center '}>
         <Svg
           onClick={handleGoBack}
           className={'!top-[-4px] cursor-pointer'}
@@ -197,7 +197,7 @@ export default function PolicyForm({
         <div
           onClick={handleGoBack}
           className={
-            'text-[18px] sm:text-[24px] md:text-[26px] xl:text-[26px] font-[500] ml-[20px] cursor-pointer'
+            'ml-[20px] cursor-pointer text-[18px] font-[500] sm:text-[24px] md:text-[26px] xl:text-[26px]'
           }
         >
           {'Policy Information'}

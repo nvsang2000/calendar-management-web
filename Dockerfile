@@ -1,5 +1,5 @@
 # Dockerfile
-FROM node:18-buster
+FROM node:20
 
 # Create app directory
 WORKDIR /usr/src/app

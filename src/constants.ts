@@ -1,3 +1,5 @@
+import { ThemeConfig } from 'antd'
+
 export enum ROLE {
   adminSys = 'adminSys',
   admin = 'admin',
@@ -90,4 +92,20 @@ export const ICON_LINK: any = {
   twitter: 'https://ssl.gstatic.com/kpui/social/twitter_32x32.png',
   linkedin: 'https://ssl.gstatic.com/kpui/social/linkedin_32x32.png',
   default: DEFAULT_IMAGE,
+}
+
+export const THEME_DEFAULD: ThemeConfig = {
+  token: {
+    colorPrimary: '#029147',
+    colorBgContainer: 'white',
+    motion: false,
+  },
+  components: {
+    Button: {
+      colorPrimary: '#029147',
+    },
+    Input: {
+      colorPrimary: '#029147',
+    },
+  },
 }

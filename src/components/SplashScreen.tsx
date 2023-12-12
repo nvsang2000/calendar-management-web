@@ -6,7 +6,7 @@ export default function SplashScreen() {
   return (
     <div
       className={
-        'absolute top-0  bottom-0  w-full h-full grid place-content-center z-50 right-[5px]'
+        'absolute inset-y-0  right-[5px]  z-50 grid h-full w-full place-content-center'
       }
     >
       <Image

@@ -91,8 +91,8 @@ export default function UserForm({
   }
 
   return (
-    <div className={'p-[40px] bg-white rounded-[10px]'}>
-      <div className={'flex items-center mb-[20px] '}>
+    <div className={'rounded-[10px] bg-white p-[40px]'}>
+      <div className={'mb-[20px] flex items-center '}>
         <Svg
           onClick={handleGoBack}
           className={'!top-[-4px] cursor-pointer'}
@@ -103,7 +103,7 @@ export default function UserForm({
         <div
           onClick={handleGoBack}
           className={
-            'text-[18px] sm:text-[24px] md:text-[26px] xl:text-[26px] font-[500] ml-[20px] cursor-pointer'
+            'ml-[20px] cursor-pointer text-[18px] font-[500] sm:text-[24px] md:text-[26px] xl:text-[26px]'
           }
         >
           {'User Information'}
@@ -218,7 +218,7 @@ export default function UserForm({
                 {isAdmin && id !== 'profile' && (
                   <div className={'!flex'}>
                     <div
-                      className={`${'base-form-label'} self-center mr-[20px]`}
+                      className={`${'base-form-label'} mr-[20px] self-center`}
                     >
                       Admin
                     </div>
@@ -232,7 +232,7 @@ export default function UserForm({
                       }
                     />
                     <Form.Item noStyle name={'role'}>
-                      <Input hidden />
+                      <Input className="!hidden" />
                     </Form.Item>
                   </div>
                 )}

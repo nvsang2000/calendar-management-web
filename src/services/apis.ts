@@ -52,6 +52,17 @@ export const updateUserApi = (id: string, params: any) =>
 export const createUserApi = (params: any) =>
   axiosInstance.post('/users', params)
 
+// API staff
+export const getAllStaffApi = (payload: FetchDto) =>
+  axiosInstance.get(`/staffs?${queryString.stringify(payload)}`)
+export const getStaffApi = (id: string) => axiosInstance.get(`/staffs/${id}`)
+export const deleteStaffApi = (id: string) =>
+  axiosInstance.delete(`/staffs/${id}`)
+export const updateStaffApi = (id: string, params: any) =>
+  axiosInstance.put(`/staffs/${id}`, params)
+export const createStaffApi = (params: any) =>
+  axiosInstance.post('/staffs', params)
+
 export const uploadImage = async (file: File) => {
   const formData = new FormData()
   formData.append('image', file)
