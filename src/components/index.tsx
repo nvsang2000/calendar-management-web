@@ -9,11 +9,15 @@ import FormLabel from './FormLabel'
 import PolicySelect from './PolicySelect'
 import Header from './Header'
 import FormTemplate from './FormTemplate'
+import GroupForm from './GroupForm'
+import StaffSelect from './StaffSelect'
+import { DatePicker, RangePicker } from './DatePicker'
 
 export {
   Svg,
   Header,
   DefaultLayout,
+  GroupForm,
   FormTemplate,
   CustomSider,
   FormLabel,
@@ -22,4 +26,7 @@ export {
   CustomUpload,
   PolicyForm,
   PolicySelect,
+  DatePicker,
+  RangePicker,
+  StaffSelect,
 }

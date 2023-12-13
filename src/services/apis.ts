@@ -12,12 +12,6 @@ interface FetchDto {
   limit?: number
 }
 
-interface PayloadZipCodeTree {
-  stateCode?: string
-  countyName?: string
-  cityName?: string
-}
-
 // API policy
 export const getPoliciesApi = (payload: FetchDto & { isActive?: boolean }) =>
   axiosInstance.get(`policies?${queryString.stringify(payload)}`)
@@ -55,6 +49,8 @@ export const createUserApi = (params: any) =>
 // API staff
 export const getAllStaffApi = (payload: FetchDto) =>
   axiosInstance.get(`/staffs?${queryString.stringify(payload)}`)
+export const getStaffListApi = (payload: FetchDto) =>
+  axiosInstance.get(`/staffs/list?${queryString.stringify(payload)}`)
 export const getStaffApi = (id: string) => axiosInstance.get(`/staffs/${id}`)
 export const deleteStaffApi = (id: string) =>
   axiosInstance.delete(`/staffs/${id}`)
@@ -73,6 +69,17 @@ export const updateGroupApi = (id: string, params: any) =>
   axiosInstance.put(`/groups/${id}`, params)
 export const createGroupApi = (params: any) =>
   axiosInstance.post('/groups', params)
+
+// API form
+export const getAllFormApi = (payload: FetchDto) =>
+  axiosInstance.get(`/forms?${queryString.stringify(payload)}`)
+export const getFormApi = (id: string) => axiosInstance.get(`/forms/${id}`)
+export const deleteFormApi = (id: string) =>
+  axiosInstance.delete(`/forms/${id}`)
+export const updateFormApi = (id: string, params: any) =>
+  axiosInstance.put(`/forms/${id}`, params)
+export const createFormApi = (params: any) =>
+  axiosInstance.post('/forms', params)
 
 export const uploadImage = async (file: File) => {
   const formData = new FormData()

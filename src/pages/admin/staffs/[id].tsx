@@ -10,7 +10,7 @@ import {
 } from '~/services/apis'
 import { ROLE } from '~/constants'
 
-export default function UserPage() {
+export default function StaffPage() {
   const router = useRouter()
   const [loading, setLoading] = useState<boolean>(false)
   const id = router.query.id + ''
@@ -35,14 +35,11 @@ export default function UserPage() {
   }, [id])
 
   const handleSubmit = async (values: any) => {
-    const role = values?.policyId ? ROLE.user : values?.role
     const submitValues = {
       ...values,
-      role,
-      policyId: role !== ROLE.admin ? values?.policyId : undefined,
+      role: ROLE.user,
+      policyId: 2,
     }
-
-    console.log('submitValues', submitValues)
 
     const hideMessage = message.loading('')
     setLoading(true)
@@ -77,6 +74,7 @@ export default function UserPage() {
   return (
     <UserForm
       id={id !== 'create' ? id : undefined}
+      isStaff={true}
       initialValues={initialValues}
       onSubmit={handleSubmit}
       onRemove={handleRemoveUser}

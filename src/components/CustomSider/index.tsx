@@ -282,7 +282,7 @@ const CustomSider = ({}) => {
           </div>
           <nav
             className={`fixed bottom-0 top-[70px] h-full w-full ${
-              !isMobileMenuOpen ? 'left-[-800px]' : 'left-[0px]'
+              !isMobileMenuOpen ? 'left-[-1000px]' : 'left-[0px]'
             } duration-600 z-20 border border-t-[1px] transition-all ease-in
             `}
           >

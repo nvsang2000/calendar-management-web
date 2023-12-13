@@ -18,13 +18,17 @@ import FormLabel from '../FormLabel'
 import Svg from '../Svg'
 import PolicySelect from '../PolicySelect'
 
+interface FormProps extends BaseFormProps {
+  isStaff: boolean
+}
 export default function UserForm({
   id,
   loading = false,
+  isStaff = true,
   initialValues = {},
   onSubmit = () => {},
   onRemove = () => {},
-}: BaseFormProps) {
+}: FormProps) {
   const router = useRouter()
   const [form] = Form.useForm()
   const [displayPasswordForm, setDisplayPasswordForm] = useState(false)
@@ -104,7 +108,7 @@ export default function UserForm({
             'ml-[20px] cursor-pointer text-[18px] font-[500] sm:text-[24px] md:text-[26px] xl:text-[26px]'
           }
         >
-          {'User Information'}
+          {'Information'}
         </div>
       </div>
       <Form
@@ -117,14 +121,20 @@ export default function UserForm({
       >
         <Row gutter={20}>
           <Col xs={24} lg={12}>
-            <FormLabel label={'Display name'} require />
+            <FormLabel label={'First name'} require />
             <Form.Item
-              name="displayName"
-              rules={[
-                { required: true, message: 'Please enter display name!' },
-              ]}
+              name="firstName"
+              rules={[{ required: true, message: 'Please enter first name!' }]}
             >
-              <Input placeholder={'Enter display name'} />
+              <Input placeholder={'Enter first name'} />
+            </Form.Item>
+
+            <FormLabel label={'Last name'} require />
+            <Form.Item
+              name="lastName"
+              rules={[{ required: true, message: 'Please enter last name!' }]}
+            >
+              <Input placeholder={'Enter last name'} />
             </Form.Item>
 
             <FormLabel label={'Phone'} require />
@@ -170,30 +180,21 @@ export default function UserForm({
               />
             </Form.Item>
 
-            <FormLabel label={'Username'} require />
-            <Form.Item
-              name="username"
-              rules={[{ required: true, message: 'Please enter username!' }]}
-            >
-              <Input
-                disabled={!!(id && id !== 'create')}
-                placeholder={'Enter username'}
-                autoComplete={undefined}
-              />
-            </Form.Item>
-            {id !== 'profile' && (
+            {!isStaff && id !== 'profile' && (
               <Form.Item noStyle shouldUpdate>
                 {() =>
                   form.getFieldValue('role') !== ROLE.admin && (
-                    <Form.Item
-                      label={<span className={'base-form-label'}>Role</span>}
-                      name="policyId"
-                      rules={[
-                        { required: true, message: 'Please select policy!' },
-                      ]}
-                    >
-                      <PolicySelect placeholder={'Please enter role'} />
-                    </Form.Item>
+                    <>
+                      <FormLabel label={'Role'} require />
+                      <Form.Item
+                        name="policyId"
+                        rules={[
+                          { required: true, message: 'Please select policy!' },
+                        ]}
+                      >
+                        <PolicySelect placeholder={'Please enter role'} />
+                      </Form.Item>
+                    </>
                   )
                 }
               </Form.Item>
@@ -213,7 +214,7 @@ export default function UserForm({
                 </div>
               </Col>
               <Col xs={12} lg={12}>
-                {isAdmin && id !== 'profile' && (
+                {!isStaff && isAdmin && id !== 'profile' && (
                   <div className={'!flex'}>
                     <div
                       className={`${'base-form-label'} mr-[20px] self-center`}

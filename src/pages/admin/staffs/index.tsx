@@ -71,13 +71,10 @@ const StaffPage: React.FC = () => {
   }, [params])
 
   const redirectUsers = async (record: any) => {
-    console.log('record', record)
-    return router.push(`/admin/users/${record?.id}`)
+    return router.push(`/admin/staffs/${record?.id}`)
   }
 
   const renderItem = (item: any) => {
-    const adminSys = item?.role === ROLE.adminSys
-
     return (
       <List.Item>
         <List.Item.Meta
@@ -92,7 +89,7 @@ const StaffPage: React.FC = () => {
               >
                 {`${item?.firstName} ${item?.lastName}`}
               </div>
-              {item?.id !== currentUser?.id && !adminSys && (
+              {item?.id !== currentUser?.id && (
                 <div className={'pl-[20px]'}>
                   <Switch
                     size="small"
@@ -110,24 +107,14 @@ const StaffPage: React.FC = () => {
                   'lg-[16px] text-[13px] font-normal text-[color:var(--text-color)] sm:text-[14px] md:text-[16px] xl:text-[16px] '
                 }
               >
-                {!adminSys && `Email: ${item?.email}`}
+                {`Email: ${item?.email}`}
               </div>
               <div
                 className={
                   'lg-[16px] text-[13px] font-normal text-[color:var(--text-color)] sm:text-[14px] md:text-[16px] xl:text-[16px]'
                 }
               >
-                {!adminSys && `Phone: ${item?.phone}`}
-              </div>
-              <div
-                className={
-                  'lg-[16px] text-[13px] font-normal capitalize text-[color:var(--text-color)] sm:text-[14px] md:text-[16px] xl:text-[16px]'
-                }
-              >
-                Role:{' '}
-                {ROLE_ADMIN.includes(item?.role)
-                  ? item?.role
-                  : item?.policy?.name}
+                {`Phone: ${item?.phone}`}
               </div>
               <div
                 className={
@@ -201,7 +188,7 @@ export default StaffPage
 export async function getServerSideProps() {
   return {
     props: {
-      pageKey: '(Users)',
+      pageKey: '(Staffs)',
       requiredRoles: [],
     },
   }

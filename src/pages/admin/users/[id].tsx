@@ -77,6 +77,7 @@ export default function UserPage() {
   return (
     <UserForm
       id={id !== 'create' ? id : undefined}
+      isStaff={false}
       initialValues={initialValues}
       onSubmit={handleSubmit}
       onRemove={handleRemoveUser}
