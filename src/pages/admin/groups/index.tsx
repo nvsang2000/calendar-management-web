@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import { Row, Col, Button, Switch, List, Pagination, Select } from 'antd'
+import { Row, Col, Button, List, Pagination, Modal, Form, message } from 'antd'
 import {
+  createGroupApi,
+  deleteGroupApi,
   getAllGroupApi,
-  getAllStaffApi,
-  getAllUserApi,
+  getGroupApi,
   updateGroupApi,
-  updateStaffApi,
-  updateUserApi,
 } from '~/services/apis'
 import { useRouter } from 'next/router'
 import { GetListParams } from '~/interfaces'
 import { useSetState } from 'react-use'
 import { numberFormat, parseSafe } from '~/helpers'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
 import dayjsInstance from '~/utils/dayjs'
 import queryString from 'query-string'
-import { PAGE_SIZE_OPTION, ROLE, ROLE_ADMIN } from '~/constants'
 import Head from 'next/head'
 import { useAuth } from '~/hooks'
+import { GroupForm } from '~/components'
 
 const DEFAULT_PARAMS: GetListParams = {
   search: '',
@@ -26,25 +26,20 @@ const DEFAULT_PARAMS: GetListParams = {
 const GroupPage: React.FC = () => {
   const router = useRouter()
   const { currentUser } = useAuth()
+  const [form] = Form.useForm()
   const [groups, setGroups] = useState([])
   const [loading, setLoading] = useState(false)
   const [meta, setMeta] = useState<any>({})
+  const [updateting, setUpdateting] = useState(false)
+  const [updateId, setUpdateId] = useState<any>('create')
+  const [showLayoutUpdate, setShowLayoutUpdate] = useState(false)
   const [params, setParams] = useSetState<any>(
     Object.keys(router.query)?.length > 0
       ? router.query
       : { ...DEFAULT_PARAMS },
   )
 
-  const onActiveChange = async (isActive: boolean, record: any) => {
-    try {
-      await updateGroupApi(record.id, { isActive })
-      fetchStaffs()
-    } catch (e: any) {
-      console.log(e.message)
-    }
-  }
-
-  const fetchStaffs = async () => {
+  const fetchGroups = async () => {
     setLoading(true)
     return getAllGroupApi({ ...params })
       .then((res) => {
@@ -68,77 +63,133 @@ const GroupPage: React.FC = () => {
   }
   useEffect(() => {
     replacePath()
-    fetchStaffs()
+    fetchGroups()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params])
 
-  const redirectUsers = async (record: any) => {
-    console.log('record', record)
-    return router.push(`/admin/users/${record?.id}`)
+  const [initialValues, setInitValues] = useState()
+  useEffect(() => {
+    if (updateId && updateId !== 'create') {
+      getGroupApi(updateId).then((res: any) => {
+        const business = res?.data
+        setInitValues({ ...business })
+      })
+    }
+  }, [updateId])
+
+  const onSubmit = async (values: any) => {
+    try {
+      if (updateId && updateId !== 'create') {
+        await updateGroupApi(updateId, values)
+        message.success('Update successful!')
+      } else {
+        await createGroupApi(values)
+        message.success('Create new successful!')
+      }
+
+      setUpdateting(false)
+      setShowLayoutUpdate(false)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      fetchGroups()
+    }
+  }
+
+  const removeCategory = async () => {
+    try {
+      await deleteGroupApi(updateId).finally(() => {
+        fetchGroups()
+        setShowLayoutUpdate(false)
+      })
+    } catch (err: any) {
+      console.log(err.message)
+    }
+  }
+
+  const confirmDeleteCategory = () => {
+    Modal.confirm({
+      icon: <ExclamationCircleOutlined />,
+      content: 'Are you sure delete?',
+      okText: 'Ok',
+      cancelText: 'Cancel',
+      onOk: removeCategory,
+    })
+  }
+
+  const layoutForm = () => {
+    return (
+      <>
+        <Modal
+          bodyStyle={{ padding: 0 }}
+          open={showLayoutUpdate}
+          onCancel={() => setShowLayoutUpdate(false)}
+          footer={[
+            updateId !== 'create' && (
+              <Button
+                danger
+                loading={updateting}
+                key={'delete'}
+                onClick={confirmDeleteCategory}
+              >
+                Delete
+              </Button>
+            ),
+            <Button
+              disabled={updateting}
+              key={'cancel'}
+              onClick={() => setShowLayoutUpdate(false)}
+            >
+              Cancel
+            </Button>,
+            <Button
+              loading={updateting}
+              key={'oke'}
+              type={'primary'}
+              onClick={() => form.submit()}
+            >
+              {updateId !== 'create' ? 'Update' : 'Create'}
+            </Button>,
+          ]}
+          destroyOnClose
+        >
+          <GroupForm
+            id={updateId !== 'create' ? updateId : undefined}
+            initialValues={updateId !== 'create' ? initialValues : undefined}
+            onSubmit={onSubmit}
+            form={form}
+          />
+        </Modal>
+      </>
+    )
   }
 
   const renderItem = (item: any) => {
-    const adminSys = item?.role === ROLE.adminSys
-
     return (
-      <List.Item>
+      <List.Item key={item?.id}>
         <List.Item.Meta
           className={
-            '!h-[140px] !border !border-[color:var(--@very-light-gray)] p-[10px] sm:!h-[140px] md:!h-[160px] lg:!h-[160px] xl:!h-[160px]'
-          }
-          title={
-            <div className={'flex justify-between'}>
-              <div
-                onClick={() => redirectUsers(item)}
-                className="cursor-pointer text-[18px] capitalize text-black"
-              >
-                {`${item?.firstName} ${item?.lastName}`}
-              </div>
-              {item?.id !== currentUser?.id && !adminSys && (
-                <div className={'pl-[20px]'}>
-                  <Switch
-                    size="small"
-                    checked={item.isActive}
-                    onChange={(checked) => onActiveChange(checked, item)}
-                  />
-                </div>
-              )}
-            </div>
+            '!border-[1px] !border-[color:var(--@very-light-gray)] p-[10px]'
           }
           description={
-            <>
+            <div className={'cursor-pointer text-[color:var(--text-color)]'}>
               <div
-                className={
-                  'lg-[16px] text-[13px] font-normal text-[color:var(--text-color)] sm:text-[14px] md:text-[16px] xl:text-[16px] '
-                }
+                onClick={() => {
+                  setShowLayoutUpdate(true)
+                  setUpdateId(item?.id)
+                }}
+                className="text-[13px] capitalize sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px] "
               >
-                {!adminSys && `Email: ${item?.email}`}
+                <div>{item?.name}</div>
+                <div
+                  className={
+                    'lg-[13px]  text-[12px] font-light italic text-[color:var(--primary-color)] sm:text-[13px] md:text-[13px] xl:text-[13px]'
+                  }
+                >
+                  {dayjsInstance(item?.createdAt).format('DD/MM/YYYY')}
+                </div>
               </div>
-              <div
-                className={
-                  'lg-[16px] text-[13px] font-normal text-[color:var(--text-color)] sm:text-[14px] md:text-[16px] xl:text-[16px]'
-                }
-              >
-                {!adminSys && `Phone: ${item?.phone}`}
-              </div>
-              <div
-                className={
-                  'lg-[16px] text-[13px] font-normal capitalize text-[color:var(--text-color)] sm:text-[14px] md:text-[16px] xl:text-[16px]'
-                }
-              >
-                Role:{' '}
-                {ROLE_ADMIN.includes(item?.role)
-                  ? item?.role
-                  : item?.policy?.name}
-              </div>
-              <div
-                className={
-                  'lg-[13px]  text-[12px] font-light italic text-[color:var(--primary-color)] sm:text-[13px] md:text-[13px] xl:text-[13px]'
-                }
-              >
-                {dayjsInstance(item.lastSeen).fromNow()}
-              </div>
-            </>
+            </div>
           }
         />
       </List.Item>
@@ -147,7 +198,7 @@ const GroupPage: React.FC = () => {
   return (
     <>
       <Head>
-        <title>Staffs</title>
+        <title>Groups</title>
       </Head>
       <div className={'mb-[20px] rounded-[8px] bg-white p-[20px]'}>
         <Row gutter={10} className={'mb-[8px]'}>
@@ -156,7 +207,7 @@ const GroupPage: React.FC = () => {
               <span className={'mr-[10px] text-[color:var(--green)]'}>
                 {numberFormat(meta?.totalDocs || 0)}
               </span>
-              Staffs
+              Groups
             </div>
           </Col>
           <Col>
