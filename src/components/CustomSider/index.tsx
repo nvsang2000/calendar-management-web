@@ -89,7 +89,11 @@ const menus: MenuItem[] = [
     ],
   },
 ]
-
+const ACTION_DEFAULD = [
+  { action: 'read', subject: 'Dashboard' },
+  { action: 'read', subject: 'Profile' },
+  { action: 'update', subject: 'Profile' },
+]
 const CustomSider = ({}) => {
   const router = useRouter()
   const currentPath = router.pathname
@@ -139,7 +143,7 @@ const CustomSider = ({}) => {
 
   const checkShowTab = (key: string) => {
     const values = [
-      { action: 'read', subject: 'Dashboard' },
+      ...ACTION_DEFAULD,
       ...(currentUser?.policy?.permissions || []),
     ]
 
@@ -154,10 +158,7 @@ const CustomSider = ({}) => {
   const renderMenus: () => any[] = () => {
     return adminMenus.map((item: any) => {
       const showTab = checkShowTab(item.key)
-
-      if (!isAdmin && !showTab) {
-        return null
-      }
+      if (!isAdmin && !showTab) return null
 
       return item?.submenu
         ? {
@@ -305,7 +306,20 @@ const CustomSider = ({}) => {
       )}
     </>
   ) : (
-    <></>
+    <div
+      className={`flex ${isTablet ? 'justify-center' : 'pl-[60px]'}  bg-white`}
+    >
+      <div onClick={() => router.push('/')} className={'my-[10px]'}>
+        <Image
+          preview={false}
+          className="mb-[10px]"
+          alt="img-logo"
+          src={'/assets/img/AZCPOS-Logo-Web.png'}
+          width={isTablet ? 150 : 350}
+          height={isTablet ? 50 : 100}
+        />
+      </div>
+    </div>
   )
 }
 

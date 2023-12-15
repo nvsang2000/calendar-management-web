@@ -39,6 +39,7 @@ export enum ENUM_MATCH_WEBSITE {
   MATCHED = 2,
   MISMATCHED = 3,
 }
+
 export const NEXT_PUBLIC_ENV_API_URL = 'NEXT_PUBLIC_ENV_API_URL'
 
 export const PAGE_SIZE_OPTION = [10, 20, 50, 100, 200, 500]

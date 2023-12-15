@@ -4,6 +4,8 @@ import { message } from 'antd'
 import { createPolicyApi, getPolicyApi, updatePolicyApi } from '~/services/apis'
 import PolicyForm from '~/components/PolicyForm'
 import { isNil } from 'lodash'
+import { useEffectOnce } from 'react-use'
+import { useAuth } from '~/hooks'
 
 interface Permission {
   id?: number
@@ -13,9 +15,18 @@ interface Permission {
 
 export default function PolicyPage() {
   const router = useRouter()
+  const { abilities } = useAuth()
   const [loading, setLoading] = useState<boolean>(false)
-  const id = router.query.id + ''
   const [initialValues, setInitialValues] = useState({})
+  const id = router.query.id + ''
+
+  useEffectOnce(() => {
+    const isAccess = abilities?.can('read', 'Policy')
+    if (!isAccess) router.push('/403')
+    return () => {
+      isAccess === undefined
+    }
+  })
 
   useEffect(() => {
     if (id && id !== 'create') {

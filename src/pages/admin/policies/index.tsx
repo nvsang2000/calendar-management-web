@@ -4,9 +4,10 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import queryString from 'query-string'
 import React, { useState } from 'react'
-import { useSetState, useDebounce } from 'react-use'
+import { useSetState, useDebounce, useEffectOnce } from 'react-use'
 import { PAGE_SIZE_OPTION } from '~/constants'
 import { numberFormat, parseSafe } from '~/helpers'
+import { useAuth } from '~/hooks'
 import { GetListParams } from '~/interfaces'
 import { getPoliciesApi } from '~/services/apis'
 import dayjsInstance from '~/utils/dayjs'
@@ -23,6 +24,7 @@ const DEFAULT_PARAMS: ParamsProps = {
 
 function Policies({}) {
   const router = useRouter()
+  const { abilities } = useAuth()
   const [policies, setPolicies] = useState([])
   const [meta, setMeta] = useState<any>({})
   const [loading, setLoading] = useState(false)
@@ -31,6 +33,14 @@ function Policies({}) {
       ? router.query
       : { ...DEFAULT_PARAMS },
   )
+
+  useEffectOnce(() => {
+    const isAccess = abilities?.can('read', 'Policy')
+    if (!isAccess) router.push('/403')
+    return () => {
+      isAccess === undefined
+    }
+  })
 
   const redirectPolicies = (record: any) => {
     router.push(`/admin/policies/${record.id}`)
@@ -123,14 +133,16 @@ function Policies({}) {
               Policy
             </div>
           </Col>
-          <Col>
-            <Button
-              type={'primary'}
-              onClick={() => router.push('/admin/policies/create')}
-            >
-              Create new
-            </Button>
-          </Col>
+          {abilities?.can('create', 'Policy') && (
+            <Col>
+              <Button
+                type={'primary'}
+                onClick={() => router.push('/admin/policies/create')}
+              >
+                Create new
+              </Button>
+            </Col>
+          )}
         </Row>
         <div className={'pb-10'}>
           <List

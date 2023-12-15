@@ -9,12 +9,23 @@ import {
   updateUserApi,
 } from '~/services/apis'
 import { ROLE } from '~/constants'
+import { useEffectOnce } from 'react-use'
+import { useAuth } from '~/hooks'
 
 export default function StaffPage() {
   const router = useRouter()
+  const { abilities } = useAuth()
   const [loading, setLoading] = useState<boolean>(false)
   const id = router.query.id + ''
   const [initialValues, setInitialValues] = useState({})
+
+  useEffectOnce(() => {
+    const isAccess = abilities?.can('read', 'Staff')
+    if (!isAccess) router.push('/403')
+    return () => {
+      isAccess === undefined
+    }
+  })
 
   useEffect(() => {
     if (id && id !== 'create') {

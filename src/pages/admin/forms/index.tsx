@@ -1,26 +1,127 @@
-import { Button, Col, Form, Input, Modal, Row, Select } from 'antd'
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  List,
+  Modal,
+  Pagination,
+  Row,
+  Select,
+} from 'antd'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import queryString from 'query-string'
+import { useEffect, useState } from 'react'
+import { useEffectOnce, useSetState } from 'react-use'
 import { FormLabel } from '~/components'
+import { parseSafe } from '~/helpers'
+import { useAuth } from '~/hooks'
+import { GetListParams } from '~/interfaces'
+import { getAllFormApi } from '~/services/apis'
+import dayjsInstance from '~/utils/dayjs'
 
 const { TextArea } = Input
+
+const DEFAULT_PARAMS: GetListParams = {
+  search: '',
+  page: 1,
+  limit: 10,
+}
 const FromPage: React.FC = () => {
   const router = useRouter()
+  const { abilities } = useAuth()
   const [form] = Form.useForm()
+  const [forms, setForms] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [meta, setMeta] = useState<any>({})
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [params, setParams] = useSetState<any>(
+    Object.keys(router.query)?.length > 0
+      ? router.query
+      : { ...DEFAULT_PARAMS },
+  )
+
+  useEffectOnce(() => {
+    const isAccess = abilities?.can('read', 'Form')
+    if (!isAccess) router.push('/403')
+    return () => {
+      isAccess === undefined
+    }
+  })
+
+  const fetchForms = async () => {
+    setLoading(true)
+    return getAllFormApi({ ...params })
+      .then((res) => {
+        const { data, headers } = res || {}
+        setForms(data || [])
+        setMeta(parseSafe(headers?.meta + ''))
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }
+
+  const replacePath = () => {
+    router.replace(
+      `${router.pathname}?${queryString.stringify({ ...params })}`,
+      undefined,
+      {
+        shallow: true,
+      },
+    )
+  }
+
+  useEffect(() => {
+    replacePath()
+    fetchForms()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params])
 
   const showModal = () => {
     setIsModalOpen(true)
   }
 
   const onSubmit = (values: any) => {
-    console.log('value', values)
     setIsModalOpen(false)
     router.push('/admin/forms/create')
   }
 
   const handleCancel = () => {
     setIsModalOpen(false)
+  }
+
+  const renderItem = (item: any) => {
+    return (
+      <List.Item key={item?.id}>
+        <List.Item.Meta
+          className={
+            '!border-[1px] !border-[color:var(--@very-light-gray)] p-[10px]'
+          }
+          description={
+            <div className={'cursor-pointer text-[color:var(--text-color)]'}>
+              <div
+                // onClick={() => {
+                //   setShowLayoutUpdate(true)
+                //   setUpdateId(item?.id)
+                //   fetchDetail(item?.id)
+                // }}
+                className="text-[13px] capitalize sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px] "
+              >
+                <div>{item?.name}</div>
+                <div
+                  className={
+                    'lg-[13px]  text-[12px] font-light italic text-[color:var(--primary-color)] sm:text-[13px] md:text-[13px] xl:text-[13px]'
+                  }
+                >
+                  {dayjsInstance(item?.createdAt).format('DD/MM/YYYY')}
+                </div>
+              </div>
+            </div>
+          }
+        />
+      </List.Item>
+    )
   }
 
   return (
@@ -34,9 +135,12 @@ const FromPage: React.FC = () => {
             </div>
           </Col>
           <Col>
-            <Button type="primary" onClick={showModal}>
-              Create new
-            </Button>
+            {abilities?.can('create', 'Form') && (
+              <Button type="primary" onClick={showModal}>
+                Create new
+              </Button>
+            )}
+
             <Modal
               title="Create New Form"
               open={isModalOpen}
@@ -131,6 +235,31 @@ const FromPage: React.FC = () => {
             </Modal>
           </Col>
         </Row>
+        <List
+          grid={{ gutter: 20, xs: 1, sm: 1, md: 2, lg: 2, xl: 3, xxl: 4 }}
+          loading={loading}
+          itemLayout="horizontal"
+          dataSource={forms}
+          renderItem={renderItem}
+        />
+        {forms?.length > 0 && (
+          <Row className="flex justify-between">
+            <Col></Col>
+            <Col className={'flex'}>
+              <Pagination
+                simple
+                size="small"
+                current={+(params?.page || 1)}
+                total={+meta?.totalPages}
+                onChange={(page) => {
+                  setParams({ page })
+                  window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+                }}
+                showSizeChanger={true}
+              />
+            </Col>
+          </Row>
+        )}
       </div>
     </>
   )

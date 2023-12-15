@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Row, Col, Button, Switch, List, Pagination, Select } from 'antd'
-import {
-  getAllStaffApi,
-  getAllUserApi,
-  updateStaffApi,
-  updateUserApi,
-} from '~/services/apis'
+import { getAllStaffApi, updateStaffApi } from '~/services/apis'
 import { useRouter } from 'next/router'
 import { GetListParams } from '~/interfaces'
-import { useSetState } from 'react-use'
+import { useEffectOnce, useSetState } from 'react-use'
 import { numberFormat, parseSafe } from '~/helpers'
 import dayjsInstance from '~/utils/dayjs'
 import queryString from 'query-string'
-import { PAGE_SIZE_OPTION, ROLE, ROLE_ADMIN } from '~/constants'
 import Head from 'next/head'
 import { useAuth } from '~/hooks'
 
@@ -23,7 +17,7 @@ const DEFAULT_PARAMS: GetListParams = {
 }
 const StaffPage: React.FC = () => {
   const router = useRouter()
-  const { currentUser } = useAuth()
+  const { currentUser, abilities } = useAuth()
   const [staffs, setStaffs] = useState([])
   const [loading, setLoading] = useState(false)
   const [meta, setMeta] = useState<any>({})
@@ -32,6 +26,14 @@ const StaffPage: React.FC = () => {
       ? router.query
       : { ...DEFAULT_PARAMS },
   )
+
+  useEffectOnce(() => {
+    const isAccess = abilities?.can('read', 'Staff')
+    if (!isAccess) router.push('/403')
+    return () => {
+      isAccess === undefined
+    }
+  })
 
   const onActiveChange = async (isActive: boolean, record: any) => {
     try {

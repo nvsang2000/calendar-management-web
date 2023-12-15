@@ -1,21 +1,25 @@
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import UserForm from '~/components/UserForm'
 import { message } from 'antd'
-import {
-  createUserApi,
-  deleteUserApi,
-  getUserApi,
-  updateUserApi,
-} from '~/services/apis'
-import { ROLE } from '~/constants'
+import { getUserApi } from '~/services/apis'
 import { FormTemplate } from '~/components'
+import { useEffectOnce } from 'react-use'
+import { useAuth } from '~/hooks'
 
 export default function UserPage() {
   const router = useRouter()
+  const { abilities } = useAuth()
   const [loading, setLoading] = useState<boolean>(false)
-  const id = router.query.id + ''
   const [initialValues, setInitialValues] = useState({})
+  const id = router.query.id + ''
+
+  useEffectOnce(() => {
+    const isAccess = abilities?.can('read', 'Policy')
+    if (!isAccess) router.push('/403')
+    return () => {
+      isAccess === undefined
+    }
+  })
 
   useEffect(() => {
     if (id && id !== 'create') {

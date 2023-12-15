@@ -9,13 +9,14 @@ import {
 } from '~/services/apis'
 import { useRouter } from 'next/router'
 import { GetListParams } from '~/interfaces'
-import { useSetState } from 'react-use'
+import { useEffectOnce, useSetState } from 'react-use'
 import { numberFormat, parseSafe } from '~/helpers'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import dayjsInstance from '~/utils/dayjs'
 import queryString from 'query-string'
 import Head from 'next/head'
 import { GroupForm } from '~/components'
+import { useAuth } from '~/hooks'
 
 const DEFAULT_PARAMS: GetListParams = {
   search: '',
@@ -24,6 +25,7 @@ const DEFAULT_PARAMS: GetListParams = {
 }
 const GroupPage: React.FC = () => {
   const router = useRouter()
+  const { abilities } = useAuth()
   const [form] = Form.useForm()
   const [groups, setGroups] = useState([])
   const [loading, setLoading] = useState(false)
@@ -37,6 +39,14 @@ const GroupPage: React.FC = () => {
       ? router.query
       : { ...DEFAULT_PARAMS },
   )
+
+  useEffectOnce(() => {
+    const isAccess = abilities?.can('read', 'Group')
+    if (!isAccess) router.push('/403')
+    return () => {
+      isAccess === undefined
+    }
+  })
 
   const fetchGroups = async () => {
     setLoading(true)
@@ -210,20 +220,22 @@ const GroupPage: React.FC = () => {
               Groups
             </div>
           </Col>
-          <Col>
-            <Button
-              type={'primary'}
-              onClick={() => {
-                setShowLayoutUpdate(true)
-                form.setFieldValue('name', undefined)
-                form.setFieldValue('userIds', undefined)
-                form.setFieldValue('description', undefined)
-                setUpdateId('create')
-              }}
-            >
-              Create new
-            </Button>
-          </Col>
+          {abilities?.can('create', 'Group') && (
+            <Col>
+              <Button
+                type={'primary'}
+                onClick={() => {
+                  setShowLayoutUpdate(true)
+                  form.setFieldValue('name', undefined)
+                  form.setFieldValue('userIds', undefined)
+                  form.setFieldValue('description', undefined)
+                  setUpdateId('create')
+                }}
+              >
+                Create new
+              </Button>
+            </Col>
+          )}
         </Row>
         <List
           grid={{ gutter: 20, xs: 1, sm: 1, md: 2, lg: 2, xl: 3, xxl: 4 }}
