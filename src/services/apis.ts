@@ -1,3 +1,4 @@
+import axios from 'axios'
 import axiosInstance from '../utils/axios'
 import queryString from 'query-string'
 
@@ -62,6 +63,8 @@ export const createStaffApi = (params: any) =>
 // API group
 export const getAllGroupApi = (payload: FetchDto) =>
   axiosInstance.get(`/groups?${queryString.stringify(payload)}`)
+export const getListGroupApi = (payload: FetchDto) =>
+  axiosInstance.get('/groups/list')
 export const getGroupApi = (id: string) => axiosInstance.get(`/groups/${id}`)
 export const deleteGroupApi = (id: string) =>
   axiosInstance.delete(`/groups/${id}`)

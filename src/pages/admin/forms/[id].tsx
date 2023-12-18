@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { message } from 'antd'
-import { getUserApi } from '~/services/apis'
+import { createFormApi, getFormApi, updateFormApi } from '~/services/apis'
 import { FormTemplate } from '~/components'
 import { useEffectOnce } from 'react-use'
 import { useAuth } from '~/hooks'
+import { parseSafe } from '~/helpers'
 
 export default function UserPage() {
   const router = useRouter()
@@ -14,7 +15,7 @@ export default function UserPage() {
   const id = router.query.id + ''
 
   useEffectOnce(() => {
-    const isAccess = abilities?.can('read', 'Policy')
+    const isAccess = abilities?.can('read', 'form')
     if (!isAccess) router.push('/403')
     return () => {
       isAccess === undefined
@@ -24,13 +25,12 @@ export default function UserPage() {
   useEffect(() => {
     if (id && id !== 'create') {
       const hideLoading = message.loading('Retrieving data.....')
-      getUserApi(id)
+      getFormApi(id)
         .then((res) => {
-          const user = res?.data
-          if (user) {
-            setInitialValues({
-              ...user,
-            })
+          const form = res?.data
+          console.log('form', form)
+          if (form) {
+            setInitialValues({ ...form, fields: parseSafe(form?.fields) })
           }
         })
         .finally(() => {
@@ -39,12 +39,38 @@ export default function UserPage() {
     }
   }, [id])
 
+  const handleSubmit = async (values: any) => {
+    const hideMessage = message.loading('')
+    setLoading(true)
+    const valuesSubmit = {
+      ...values,
+      type: +values?.type,
+      fields: JSON.stringify(values?.fields),
+    }
+
+    try {
+      if (id && id !== 'create') {
+        await updateFormApi(id, valuesSubmit)
+        message.success('Update successful!')
+      } else {
+        await createFormApi(valuesSubmit)
+        message.success('Create new successful!')
+      }
+
+      return router.back()
+    } catch (e: any) {
+      console.log(e.message)
+    } finally {
+      hideMessage()
+      setLoading(false)
+    }
+  }
+
   return (
     <FormTemplate
       id={id !== 'create' ? id : undefined}
       initialValues={initialValues}
-      onSubmit={() => console.log('hello')}
-      //   onRemove={handleRemoveUser}
+      onSubmit={handleSubmit}
       loading={loading}
     />
   )

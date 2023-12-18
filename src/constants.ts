@@ -72,6 +72,40 @@ export const OPTION_SOURCE = [
   { label: 'Yellow Page', value: 'yellow' },
 ]
 
+export const MEETING_FORMAT = [
+  {
+    value: 1,
+    label: 'Metting online',
+  },
+  {
+    value: 2,
+    label: 'Meeting face to face',
+  },
+]
+
+export const FIELD_OPTION = [
+  {
+    value: 'PHONE',
+    label: 'Phone number',
+  },
+  {
+    value: 'EMAIL',
+    label: 'Email',
+  },
+  {
+    value: 'TEXT',
+    label: 'Text box',
+  },
+  {
+    value: 'CHECK',
+    label: 'Check box',
+  },
+  {
+    value: 'TEXT_AREA',
+    label: 'Text area',
+  },
+]
+
 export const LINK_WEBSITE_PATTERN =
   /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
 

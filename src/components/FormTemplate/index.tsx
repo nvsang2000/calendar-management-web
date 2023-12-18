@@ -1,27 +1,14 @@
-import { Button, Checkbox, Col, Form, Input, Row, Select } from 'antd'
+import { Button, Checkbox, Col, Form, Input, Row, Select, Space } from 'antd'
 import { BaseFormProps } from '~/interfaces'
 import FormLabel from '../FormLabel'
 import Svg from '../Svg'
 import { DatePicker } from '../DatePicker'
 import { useRouter } from 'next/router'
+import GroupsSelect from '../GroupSelect'
+import { FIELD_OPTION, MEETING_FORMAT } from '~/constants'
+import { useEffect } from 'react'
 
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 24 },
-    sm: { span: 4 },
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 20 },
-  },
-}
-
-const formItemLayoutWithOutLabel = {
-  wrapperCol: {
-    xs: { span: 24, offset: 0 },
-    sm: { span: 20, offset: 4 },
-  },
-}
+const { TextArea } = Input
 
 export default function FormTemplatet({
   id = '',
@@ -31,10 +18,18 @@ export default function FormTemplatet({
 }: BaseFormProps) {
   const router = useRouter()
   const [form] = Form.useForm()
-
+  const watchCustomField = Form.useWatch('customFields', form)
   const handleGoBack = () => {
     return router.back()
   }
+
+  console.log('watchCustomField', watchCustomField)
+
+  useEffect(() => {
+    if (Object.keys(initialValues)?.length > 0) {
+      form.resetFields()
+    }
+  }, [form, initialValues])
 
   return (
     <>
@@ -53,7 +48,7 @@ export default function FormTemplatet({
               'ml-[20px] cursor-pointer text-[18px] font-[500] sm:text-[24px] md:text-[26px] xl:text-[26px]'
             }
           >
-            {' Create new Form'}
+            {id ? initialValues?.name : 'Create new Form'}
           </div>
         </div>
         <Form
@@ -66,116 +61,130 @@ export default function FormTemplatet({
         >
           <Row gutter={20}>
             <Col xs={24} lg={12}>
-              <FormLabel label={'Meeting time'} require />
+              <FormLabel label={'Name Form'} require />
               <Form.Item
-                name="meetingTime"
-                rules={[{ required: true, message: 'Please Enter password!' }]}
+                name="name"
+                rules={[{ required: true, message: 'Please enter name!' }]}
               >
-                <DatePicker format={'DD/MM/YYYY'} className="!w-full" />
+                <Input placeholder={'Enter name '} />
+              </Form.Item>
+
+              <FormLabel label={'Meeting format'} require />
+              <Form.Item
+                name="type"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter meeting format!',
+                  },
+                ]}
+              >
+                <Select
+                  showSearch
+                  placeholder="Select meeting format"
+                  filterOption={(input, option) =>
+                    (option?.label ?? '').includes(input)
+                  }
+                  filterSort={(optionA, optionB) =>
+                    (optionA?.label ?? '')
+                      .toLowerCase()
+                      .localeCompare((optionB?.label ?? '').toLowerCase())
+                  }
+                  options={MEETING_FORMAT}
+                />
+              </Form.Item>
+              <FormLabel label={'Group'} require />
+              <Form.Item
+                name="groupIds"
+                rules={[{ required: true, message: 'Please select group!' }]}
+              >
+                <GroupsSelect multiple placeholder="Enter group" />
+              </Form.Item>
+
+              <FormLabel label={'Description'} />
+              <Form.Item name="description">
+                <TextArea rows={4} placeholder="Enter description" />
               </Form.Item>
             </Col>
-          </Row>
-          <Row gutter={20}>
             <Col xs={24} lg={12}>
               <FormLabel label={'Custom field'} />
-
-              <div className=" p-[10px]">
-                <Form.List name="customFields">
-                  {(fields, { add, remove }) => (
-                    <>
-                      {fields.map(({ key, name, ...restField }) => (
-                        <Row gutter={20} key={key} className="mt-[10px]  ">
-                          <Col xs={22}>
-                            <Col xs={24} lg={24}>
-                              <FormLabel label={'Type input'} require />
-                              <Form.Item {...restField} name={[name, `type`]}>
-                                <Select
-                                  className="w-full"
-                                  showSearch
-                                  placeholder="Search to Select"
-                                  optionFilterProp="children"
-                                  filterOption={(input, option) =>
-                                    (option?.label ?? '').includes(input)
-                                  }
-                                  filterSort={(optionA, optionB) =>
-                                    (optionA?.label ?? '')
-                                      .toLowerCase()
-                                      .localeCompare(
-                                        (optionB?.label ?? '').toLowerCase(),
-                                      )
-                                  }
-                                  options={[
-                                    {
-                                      value: '1',
-                                      label: 'Phone number',
-                                    },
-                                    {
-                                      value: '2',
-                                      label: 'Email',
-                                    },
-                                    {
-                                      value: '3',
-                                      label: 'Text box',
-                                    },
-                                    {
-                                      value: '4',
-                                      label: 'Check box',
-                                    },
-                                    {
-                                      value: '5',
-                                      label: 'Text area',
-                                    },
-                                  ]}
-                                />
-                              </Form.Item>
-                            </Col>
-                            <Col xs={24} lg={24}>
-                              <FormLabel label={'Title input'} require />
-                              <Form.Item {...restField} name={[name, `label`]}>
-                                <Input
-                                  className={'font-medium'}
-                                  placeholder={'Enter title'}
-                                />
-                              </Form.Item>
-                            </Col>
-
-                            <Col xs={24} lg={24}>
-                              <Form.Item
-                                {...restField}
-                                name={[name, `value`]}
-                                className={'relative top-[-6px]'}
-                              >
-                                <Checkbox>This question is required</Checkbox>
-                              </Form.Item>
-                            </Col>
+              <Form.List name="fields">
+                {(fields, { add, remove }) => (
+                  <>
+                    {fields.map(({ key, name, ...restField }) => (
+                      <Row gutter={20} key={key} className="mt-[10px]  ">
+                        <Col xs={22}>
+                          <Col xs={24} lg={24}>
+                            <FormLabel label={'Type input'} require />
+                            <Form.Item {...restField} name={[name, 'type']}>
+                              <Select
+                                className="w-full"
+                                showSearch
+                                placeholder="Search to Select"
+                                optionFilterProp="children"
+                                filterOption={(input, option) =>
+                                  (option?.label ?? '').includes(input)
+                                }
+                                filterSort={(optionA, optionB) =>
+                                  (optionA?.label ?? '')
+                                    .toLowerCase()
+                                    .localeCompare(
+                                      (optionB?.label ?? '').toLowerCase(),
+                                    )
+                                }
+                                options={FIELD_OPTION}
+                              />
+                            </Form.Item>
                           </Col>
-                          <Col xs={2} className={'mt-[10px]'}>
-                            <Svg
-                              className={'cursor-pointer opacity-80'}
-                              name={'ic_remove'}
-                              width={24}
-                              height={24}
-                              onClick={() => remove(name)}
-                            />
+                          <Col xs={24} lg={24}>
+                            <FormLabel label={'Title input'} require />
+                            <Form.Item {...restField} name={[name, 'label']}>
+                              <Input
+                                className={'font-medium'}
+                                placeholder={'Enter title'}
+                              />
+                            </Form.Item>
                           </Col>
-                        </Row>
-                      ))}
-                      <Form.Item>
-                        <Button type="dashed" onClick={() => add()} block>
-                          Add new field
-                        </Button>
-                      </Form.Item>
-                    </>
-                  )}
-                </Form.List>
-              </div>
+
+                          <Col xs={24} lg={24}>
+                            <Form.Item
+                              {...restField}
+                              name={[name, 'required']}
+                              className={'relative top-[-6px]'}
+                              valuePropName="checked"
+                            >
+                              <Checkbox>This question is required</Checkbox>
+                            </Form.Item>
+                          </Col>
+                        </Col>
+                        <Col xs={2} className={'mt-[10px]'}>
+                          <Svg
+                            className={'cursor-pointer opacity-80'}
+                            name={'ic_remove'}
+                            width={24}
+                            height={24}
+                            onClick={() => remove(name)}
+                          />
+                        </Col>
+                      </Row>
+                    ))}
+                    <Form.Item>
+                      <Button type="dashed" onClick={() => add()} block>
+                        Add new field
+                      </Button>
+                    </Form.Item>
+                  </>
+                )}
+              </Form.List>
             </Col>
           </Row>
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-          </Form.Item>
+          <Row gutter={40} className={'py-[40px] pl-[20px]'}>
+            <Space align="center">
+              <Button loading={loading} type={'primary'} htmlType={'submit'}>
+                {!id ? 'Create' : 'Update'}
+              </Button>
+            </Space>
+          </Row>
         </Form>
       </div>
     </>

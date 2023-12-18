@@ -1,26 +1,14 @@
-import {
-  Button,
-  Col,
-  Form,
-  Input,
-  List,
-  Modal,
-  Pagination,
-  Row,
-  Select,
-} from 'antd'
+import { Button, Col, List, Pagination, Row, Table } from 'antd'
 import { useRouter } from 'next/router'
 import queryString from 'query-string'
 import { useEffect, useState } from 'react'
 import { useEffectOnce, useSetState } from 'react-use'
-import { FormLabel } from '~/components'
+import { MEETING_FORMAT } from '~/constants'
 import { parseSafe } from '~/helpers'
-import { useAuth } from '~/hooks'
+import { useAuth, useDevice } from '~/hooks'
 import { GetListParams } from '~/interfaces'
 import { getAllFormApi } from '~/services/apis'
 import dayjsInstance from '~/utils/dayjs'
-
-const { TextArea } = Input
 
 const DEFAULT_PARAMS: GetListParams = {
   search: '',
@@ -30,11 +18,10 @@ const DEFAULT_PARAMS: GetListParams = {
 const FromPage: React.FC = () => {
   const router = useRouter()
   const { abilities } = useAuth()
-  const [form] = Form.useForm()
+  const { isTablet } = useDevice()
   const [forms, setForms] = useState([])
   const [loading, setLoading] = useState(false)
   const [meta, setMeta] = useState<any>({})
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const [params, setParams] = useSetState<any>(
     Object.keys(router.query)?.length > 0
       ? router.query
@@ -78,20 +65,7 @@ const FromPage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params])
 
-  const showModal = () => {
-    setIsModalOpen(true)
-  }
-
-  const onSubmit = (values: any) => {
-    setIsModalOpen(false)
-    router.push('/admin/forms/create')
-  }
-
-  const handleCancel = () => {
-    setIsModalOpen(false)
-  }
-
-  const renderItem = (item: any) => {
+  const renderItemForMobile = (item: any) => {
     return (
       <List.Item key={item?.id}>
         <List.Item.Meta
@@ -100,14 +74,7 @@ const FromPage: React.FC = () => {
           }
           description={
             <div className={'cursor-pointer text-[color:var(--text-color)]'}>
-              <div
-                // onClick={() => {
-                //   setShowLayoutUpdate(true)
-                //   setUpdateId(item?.id)
-                //   fetchDetail(item?.id)
-                // }}
-                className="text-[13px] capitalize sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px] "
-              >
+              <div className="text-[13px] capitalize sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px] ">
                 <div>{item?.name}</div>
                 <div
                   className={
@@ -124,6 +91,86 @@ const FromPage: React.FC = () => {
     )
   }
 
+  const redirectForm = (record: any) => {
+    return router.push(`/admin/forms/${record?.id}`)
+  }
+
+  const renderColumns = [
+    {
+      title: <div className={'base-table-cell-label'}>Name</div>,
+      key: 'name',
+      dataIndex: 'name',
+      width: 150,
+      render: (_: any, record: any) => (
+        <div onClick={() => redirectForm(record)} className={'cursor-pointer'}>
+          <div className={'text-[16px] font-medium'}>{record?.name}</div>
+        </div>
+      ),
+    },
+    {
+      title: <div className={'base-table-cell-label'}>Meeting format</div>,
+      key: 'type',
+      dataIndex: 'type',
+      width: 250,
+      render: (_: any, record: any) => {
+        const type = MEETING_FORMAT?.filter((i) => +i?.value === record?.type)
+        return (
+          <div
+            onClick={() => redirectForm(record)}
+            className={'cursor-pointer'}
+          >
+            <div className={'text-[16px] font-medium'}>{type?.[0]?.label}</div>
+          </div>
+        )
+      },
+    },
+    {
+      title: <div className={'base-table-cell-label'}>Description</div>,
+      key: 'description',
+      dataIndex: 'description',
+      width: 350,
+      render: (_: any, record: any) => (
+        <div onClick={() => redirectForm(record)} className={'cursor-pointer'}>
+          <div className={'text-[14px] font-normal'}>{record?.description}</div>
+        </div>
+      ),
+    },
+    {
+      title: <div className={'base-table-cell-label '}>Created date</div>,
+      key: 'createdAt',
+      dataIndex: 'createdAt',
+      width: 100,
+      render: (_: any, record: any) => {
+        return (
+          <div
+            onClick={() => redirectForm(record)}
+            className={'cursor-pointer text-[14px] font-normal'}
+          >
+            <span className={'!inline-block min-w-[100px]'}>
+              {dayjsInstance(record?.createdAt).format('DD/MM/YYYY')}
+            </span>
+          </div>
+        )
+      },
+    },
+    {
+      title: <div className={'base-table-cell-label'}>Link</div>,
+      key: 'slug',
+      dataIndex: 'slug',
+      width: 200,
+      render: (_: any, record: any) => {
+        return (
+          <div
+            className={'cursor-pointer text-[14px] font-normal'}
+            onClick={() => redirectForm(record)}
+          >
+            {record?.slug}
+          </div>
+        )
+      },
+    },
+  ]
+
   return (
     <>
       <div className="mb-[20px] rounded-[8px] bg-white p-[20px]">
@@ -136,129 +183,63 @@ const FromPage: React.FC = () => {
           </Col>
           <Col>
             {abilities?.can('create', 'Form') && (
-              <Button type="primary" onClick={showModal}>
+              <Button
+                type="primary"
+                onClick={() => router.push('/admin/forms/create')}
+              >
                 Create new
               </Button>
             )}
-
-            <Modal
-              title="Create New Form"
-              open={isModalOpen}
-              // onOk={handleOk}
-              onCancel={handleCancel}
-              footer={[
-                <Button
-                  key={'cancel'}
-                  // onClick={() => setShowLayoutUpdate(false)}
-                >
-                  Cancel
-                </Button>,
-                <Button
-                  // loading={updateting}
-                  key={'oke'}
-                  type={'primary'}
-                  onClick={() => form.submit()}
-                >
-                  {'Create'}
-                </Button>,
-              ]}
-            >
-              <Form
-                layout={'vertical'}
-                form={form}
-                onFinish={onSubmit}
-                style={{ marginTop: '30px' }}
-              >
-                <Row gutter={40}>
-                  <Col xs={24} lg={24}>
-                    <FormLabel label={'Name Form'} require />
-                    <Form.Item
-                      name="name"
-                      rules={[
-                        { required: true, message: 'Please enter name!' },
-                      ]}
-                    >
-                      <Input placeholder={'Enter name '} />
-                    </Form.Item>
-
-                    <FormLabel label={'Meeting format'} require />
-                    <Form.Item
-                      name="meetingFormat"
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Please enter meeting format!',
-                        },
-                      ]}
-                    >
-                      <Select
-                        showSearch
-                        placeholder="Search to Select"
-                        optionFilterProp="children"
-                        filterOption={(input, option) =>
-                          (option?.label ?? '').includes(input)
-                        }
-                        filterSort={(optionA, optionB) =>
-                          (optionA?.label ?? '')
-                            .toLowerCase()
-                            .localeCompare((optionB?.label ?? '').toLowerCase())
-                        }
-                        options={[
-                          {
-                            value: '1',
-                            label: 'Metting online',
-                          },
-                          {
-                            value: '2',
-                            label: 'Meeting face to face',
-                          },
-                        ]}
-                      />
-                    </Form.Item>
-                    <FormLabel label={'Group'} require />
-                    <Form.Item
-                      name="group"
-                      rules={[
-                        { required: true, message: 'Please select group!' },
-                      ]}
-                    >
-                      <Input placeholder={'Enter name '} />
-                    </Form.Item>
-
-                    <FormLabel label={'Description'} />
-                    <Form.Item name="description">
-                      <TextArea rows={4} />
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </Form>
-            </Modal>
           </Col>
         </Row>
-        <List
-          grid={{ gutter: 20, xs: 1, sm: 1, md: 2, lg: 2, xl: 3, xxl: 4 }}
-          loading={loading}
-          itemLayout="horizontal"
-          dataSource={forms}
-          renderItem={renderItem}
-        />
-        {forms?.length > 0 && (
-          <Row className="flex justify-between">
-            <Col></Col>
-            <Col className={'flex'}>
-              <Pagination
-                simple
-                size="small"
-                current={+(params?.page || 1)}
-                total={+meta?.totalPages}
-                onChange={(page) => {
-                  setParams({ page })
-                  window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-                }}
-                showSizeChanger={true}
-              />
-            </Col>
-          </Row>
+        {isTablet ? (
+          <>
+            <List
+              grid={{ gutter: 20, xs: 1, sm: 1, md: 2, lg: 2, xl: 3, xxl: 4 }}
+              loading={loading}
+              itemLayout="horizontal"
+              dataSource={forms}
+              renderItem={renderItemForMobile}
+            />
+            {forms?.length > 0 && (
+              <Row className="flex justify-between">
+                <Col></Col>
+                <Col className={'flex'}>
+                  <Pagination
+                    simple
+                    size="small"
+                    current={+(params?.page || 1)}
+                    total={+meta?.totalPages}
+                    onChange={(page) => {
+                      setParams({ page })
+                      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+                    }}
+                    showSizeChanger={true}
+                  />
+                </Col>
+              </Row>
+            )}
+          </>
+        ) : (
+          <Table
+            dataSource={forms}
+            rowKey={(record) => record?.id + ''}
+            columns={renderColumns}
+            pagination={{
+              total: meta?.totalDocs,
+              pageSize: params?.limit,
+              showSizeChanger: true,
+              pageSizeOptions: [10, 20, 50, 100, 200],
+              onShowSizeChange(current, size) {
+                setParams({ limit: size })
+              },
+              hideOnSinglePage: true,
+              onChange: (page) => setParams({ page }),
+              current: +(params?.page || 1),
+            }}
+            loading={loading}
+            locale={{ emptyText: 'Not fund data!' }}
+          />
         )}
       </div>
     </>

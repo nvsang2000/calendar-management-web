@@ -12,6 +12,7 @@ import FormTemplate from './FormTemplate'
 import GroupForm from './GroupForm'
 import StaffSelect from './StaffSelect'
 import { DatePicker, RangePicker } from './DatePicker'
+import GroupsSelect from './GroupSelect'
 
 export {
   Svg,
@@ -29,4 +30,5 @@ export {
   DatePicker,
   RangePicker,
   StaffSelect,
+  GroupsSelect,
 }
