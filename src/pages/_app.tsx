@@ -13,9 +13,11 @@ import { ConfigProvider, theme } from 'antd'
 import { THEME_DEFAULD } from '~/constants'
 
 const routesNoNeedAuth = ['/login']
-const routesNoNeedDefaultLayout = ['/admin/orders/print']
-
-process.env.TZ = 'Asia/Ho_Chi_Minh'
+const routesNoNeedDefaultLayout = [
+  '/admin/orders/print',
+  '/form/[user]/[id]',
+  '/404',
+]
 
 function MyApp({
   Component,
@@ -24,6 +26,7 @@ function MyApp({
   globalSettings,
   ...appProps
 }: AppProps & any) {
+  console.log('appProps.router.pathname', appProps.router.pathname)
   if (routesNoNeedDefaultLayout.includes(appProps.router.pathname))
     return <Component {...pageProps} />
 

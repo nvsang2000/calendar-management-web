@@ -69,6 +69,14 @@ export default function FormTemplatet({
                 <Input placeholder={'Enter name '} />
               </Form.Item>
 
+              <FormLabel label={'Slug'} require />
+              <Form.Item
+                name="slug"
+                rules={[{ required: true, message: 'Please enter slug!' }]}
+              >
+                <Input placeholder={'Enter slug '} />
+              </Form.Item>
+
               <FormLabel label={'Meeting format'} require />
               <Form.Item
                 name="type"
@@ -182,6 +190,12 @@ export default function FormTemplatet({
             <Space align="center">
               <Button loading={loading} type={'primary'} htmlType={'submit'}>
                 {!id ? 'Create' : 'Update'}
+              </Button>
+              <Button
+                type={'primary'}
+                onClick={() => router.push(`/form/${initialValues?.slug}`)}
+              >
+                Share
               </Button>
             </Space>
           </Row>

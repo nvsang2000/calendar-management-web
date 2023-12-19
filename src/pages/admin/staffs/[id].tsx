@@ -75,7 +75,7 @@ export default function StaffPage() {
   const handleRemoveUser = async (id: string) => {
     try {
       await deleteUserApi(id)
-      message.success('Remove user successful!')
+      message.success('Remove staff successful!')
       router.back()
     } catch (e: any) {
       console.log(e.message)
@@ -97,7 +97,7 @@ export default function StaffPage() {
 export async function getServerSideProps() {
   return {
     props: {
-      pageKey: '(Users)',
+      pageKey: '(Staff)',
       requiredRoles: [],
     },
   }
