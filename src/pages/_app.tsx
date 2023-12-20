@@ -13,11 +13,7 @@ import { ConfigProvider, theme } from 'antd'
 import { THEME_DEFAULD } from '~/constants'
 
 const routesNoNeedAuth = ['/login']
-const routesNoNeedDefaultLayout = [
-  '/admin/orders/print',
-  '/form/[user]/[id]',
-  '/404',
-]
+const routesNoNeedDefaultLayout = ['/admin/orders/print', '/form/[id]', '/404']
 
 function MyApp({
   Component,

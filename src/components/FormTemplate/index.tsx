@@ -69,13 +69,17 @@ export default function FormTemplatet({
                 <Input placeholder={'Enter name '} />
               </Form.Item>
 
-              <FormLabel label={'Slug'} require />
-              <Form.Item
-                name="slug"
-                rules={[{ required: true, message: 'Please enter slug!' }]}
-              >
-                <Input placeholder={'Enter slug '} />
-              </Form.Item>
+              {id && (
+                <>
+                  <FormLabel label={'Slug'} require />
+                  <Form.Item
+                    name="slug"
+                    rules={[{ required: true, message: 'Please enter slug!' }]}
+                  >
+                    <Input placeholder={'Enter slug '} />
+                  </Form.Item>
+                </>
+              )}
 
               <FormLabel label={'Meeting format'} require />
               <Form.Item
