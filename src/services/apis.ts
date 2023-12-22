@@ -13,6 +13,10 @@ interface FetchDto {
   limit?: number
 }
 
+// API pulic web
+export const getFormPublicApi = (id: any) =>
+  axiosInstance.get(`/api/form/${id}`)
+
 // API policy
 export const getPoliciesApi = (payload: FetchDto & { isActive?: boolean }) =>
   axiosInstance.get(`policies?${queryString.stringify(payload)}`)

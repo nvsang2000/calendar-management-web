@@ -221,7 +221,7 @@ export default function PolicyForm({
                   { required: true, message: 'Please enter name policy!' },
                 ]}
               >
-                <Input placeholder={'Enter name policy'} />
+                <Input size="large" placeholder={'Enter name policy'} />
               </Form.Item>
             </Col>
             <Col xs={24} lg={12}>

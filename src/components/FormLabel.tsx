@@ -23,14 +23,18 @@ export default function FormLabel({
   return (
     <>
       <Row className={className}>
-        <div
-          className={
-            'base-form-label mb-[6px] text-[14px] sm:text-[14pxpx] md:text-[14px] lg:text-[16px] xl:text-[16px]'
-          }
-        >
-          {label}
+        <div className={''}>
+          <span
+            className={
+              'mb-[6px] text-[14px] text-black sm:text-[14pxpx] md:text-[14px] lg:text-[16px] xl:text-[16px]'
+            }
+          >
+            {label}
+          </span>
           {require && (
-            <span className={'text-[color:var(--light-red)]'}>*</span>
+            <span className={'ml-[4px]'}>
+              (<span className="text-[color:var(--light-red)]">Require</span>)
+            </span>
           )}
         </div>
         {iconCoppy && (

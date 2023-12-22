@@ -51,6 +51,7 @@ export default function UserForm({
           rules={[{ required: true, message: 'Please Enter password!' }]}
         >
           <Input.Password
+            size="large"
             placeholder={'Enter password'}
             autoComplete={undefined}
           />
@@ -78,6 +79,7 @@ export default function UserForm({
               ]}
             >
               <Input.Password
+                size="large"
                 placeholder={'Enter password'}
                 autoComplete={undefined}
               />
@@ -126,7 +128,7 @@ export default function UserForm({
               name="firstName"
               rules={[{ required: true, message: 'Please enter first name!' }]}
             >
-              <Input placeholder={'Enter first name'} />
+              <Input size="large" placeholder={'Enter first name'} />
             </Form.Item>
 
             <FormLabel label={'Last name'} require />
@@ -134,7 +136,7 @@ export default function UserForm({
               name="lastName"
               rules={[{ required: true, message: 'Please enter last name!' }]}
             >
-              <Input placeholder={'Enter last name'} />
+              <Input size="large" placeholder={'Enter last name'} />
             </Form.Item>
 
             <FormLabel label={'Phone'} require />
@@ -146,6 +148,7 @@ export default function UserForm({
                 disabled={
                   !!(id && id !== 'create') && !abilities.can('update', 'User')
                 }
+                size="large"
                 placeholder={'Enter phone'}
               />
             </Form.Item>
@@ -174,6 +177,7 @@ export default function UserForm({
               ]}
             >
               <Input
+                size="large"
                 disabled={!!(id && id !== 'create')}
                 placeholder={'Please enter email'}
                 autoComplete={undefined}
@@ -192,7 +196,10 @@ export default function UserForm({
                           { required: true, message: 'Please select policy!' },
                         ]}
                       >
-                        <PolicySelect placeholder={'Please enter role'} />
+                        <PolicySelect
+                          size="large"
+                          placeholder={'Please enter role'}
+                        />
                       </Form.Item>
                     </>
                   )
@@ -231,7 +238,7 @@ export default function UserForm({
                       }
                     />
                     <Form.Item noStyle name={'role'}>
-                      <Input className="!hidden" />
+                      <Input size="large" className="!hidden" />
                     </Form.Item>
                   </div>
                 )}
@@ -252,6 +259,7 @@ export default function UserForm({
                           ? ROLE.admin
                           : form.getFieldValue('policy')?.name
                       }
+                      size="large"
                       disabled
                     />
                   </Form.Item>

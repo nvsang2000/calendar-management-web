@@ -62,7 +62,7 @@ export default function GroupForm({
               <div>
                 <FormLabel label={'ID'} iconCoppy valueCoppy={watchID} />
                 <Form.Item name="id">
-                  <Input disabled />
+                  <Input size="large" disabled />
                 </Form.Item>
               </div>
             )}
@@ -72,7 +72,7 @@ export default function GroupForm({
               name={'name'}
               rules={[{ required: true, message: 'Please enter name!' }]}
             >
-              <Input placeholder="Enter name!" />
+              <Input size="large" placeholder="Enter name!" />
             </Form.Item>
 
             <FormLabel label={'Staff list'} require />
@@ -80,12 +80,16 @@ export default function GroupForm({
               name={'userIds'}
               rules={[{ required: true, message: 'Please enter name!' }]}
             >
-              <StaffSelect multiple placeholder="Enter name!" />
+              <StaffSelect size="large" multiple placeholder="Enter name!" />
             </Form.Item>
 
             <FormLabel label={'Description'} />
             <Form.Item name="description">
-              <TextArea rows={4} placeholder="Enter description!" />
+              <TextArea
+                size="large"
+                rows={4}
+                placeholder="Enter description!"
+              />
             </Form.Item>
           </Col>
         </Row>

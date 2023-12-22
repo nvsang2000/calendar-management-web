@@ -1,4 +1,14 @@
-import { Button, Checkbox, Col, Form, Input, Row, Select, Space } from 'antd'
+import {
+  Button,
+  Checkbox,
+  Col,
+  Form,
+  Input,
+  Modal,
+  Row,
+  Select,
+  Space,
+} from 'antd'
 import { BaseFormProps } from '~/interfaces'
 import FormLabel from '../FormLabel'
 import Svg from '../Svg'
@@ -6,7 +16,8 @@ import { DatePicker } from '../DatePicker'
 import { useRouter } from 'next/router'
 import GroupsSelect from '../GroupSelect'
 import { FIELD_OPTION, MEETING_FORMAT } from '~/constants'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { useAuth } from '~/hooks'
 
 const { TextArea } = Input
 
@@ -17,7 +28,9 @@ export default function FormTemplatet({
   onSubmit = () => {},
 }: BaseFormProps) {
   const router = useRouter()
+  const { currentUser } = useAuth()
   const [form] = Form.useForm()
+  const [showFormLayout, setShowFormLayout] = useState(false)
   const watchCustomField = Form.useWatch('customFields', form)
   const handleGoBack = () => {
     return router.back()
@@ -30,6 +43,46 @@ export default function FormTemplatet({
       form.resetFields()
     }
   }, [form, initialValues])
+
+  const layoutForm = () => {
+    const formLink = `${process.env.NEXT_PUBLIC_ENV_CLIENT_URL}book-appointment/${initialValues?.slug}`
+    form.setFieldValue('formLink', formLink)
+    console.log('formLink', formLink)
+    return (
+      <>
+        <Modal
+          bodyStyle={{ padding: 0 }}
+          open={showFormLayout}
+          onCancel={() => setShowFormLayout(false)}
+          footer={[
+            <Button
+              className="bg-[var(--green)]"
+              key={'cancel'}
+              //onClick={() => setShowLayoutUpdate(false)}
+            >
+              Cancel
+            </Button>,
+            <Button key={'oke'} type={'primary'} onClick={() => form.submit()}>
+              oke
+            </Button>,
+          ]}
+          destroyOnClose
+        >
+          <div className="mt-[20px] p-[10px]">
+            <FormLabel label={'Link form'} iconCoppy />
+            <Form.Item name="formLink">
+              <Input placeholder={'Link form'} />
+            </Form.Item>
+
+            <FormLabel label={'Description'} />
+            <Form.Item name="description">
+              <TextArea rows={4} placeholder="Enter description" />
+            </Form.Item>
+          </div>
+        </Modal>
+      </>
+    )
+  }
 
   return (
     <>
@@ -59,14 +112,15 @@ export default function FormTemplatet({
           onFinishFailed={(e) => console.log(e)}
           onFinish={onSubmit}
         >
-          <Row gutter={20}>
+          <Row gutter={40}>
+            {layoutForm()}
             <Col xs={24} lg={12}>
               <FormLabel label={'Name Form'} require />
               <Form.Item
                 name="name"
                 rules={[{ required: true, message: 'Please enter name!' }]}
               >
-                <Input placeholder={'Enter name '} />
+                <Input size="large" placeholder={'Enter name '} />
               </Form.Item>
 
               {id && (
@@ -76,7 +130,7 @@ export default function FormTemplatet({
                     name="slug"
                     rules={[{ required: true, message: 'Please enter slug!' }]}
                   >
-                    <Input placeholder={'Enter slug '} />
+                    <Input size="large" placeholder={'Enter slug '} />
                   </Form.Item>
                 </>
               )}
@@ -94,14 +148,7 @@ export default function FormTemplatet({
                 <Select
                   showSearch
                   placeholder="Select meeting format"
-                  filterOption={(input, option) =>
-                    (option?.label ?? '').includes(input)
-                  }
-                  filterSort={(optionA, optionB) =>
-                    (optionA?.label ?? '')
-                      .toLowerCase()
-                      .localeCompare((optionB?.label ?? '').toLowerCase())
-                  }
+                  size="large"
                   options={MEETING_FORMAT}
                 />
               </Form.Item>
@@ -110,12 +157,16 @@ export default function FormTemplatet({
                 name="groupIds"
                 rules={[{ required: true, message: 'Please select group!' }]}
               >
-                <GroupsSelect multiple placeholder="Enter group" />
+                <GroupsSelect size="large" multiple placeholder="Enter group" />
               </Form.Item>
 
               <FormLabel label={'Description'} />
               <Form.Item name="description">
-                <TextArea rows={4} placeholder="Enter description" />
+                <TextArea
+                  size="large"
+                  rows={4}
+                  placeholder="Enter description"
+                />
               </Form.Item>
             </Col>
             <Col xs={24} lg={12}>
@@ -133,17 +184,7 @@ export default function FormTemplatet({
                                 className="w-full"
                                 showSearch
                                 placeholder="Search to Select"
-                                optionFilterProp="children"
-                                filterOption={(input, option) =>
-                                  (option?.label ?? '').includes(input)
-                                }
-                                filterSort={(optionA, optionB) =>
-                                  (optionA?.label ?? '')
-                                    .toLowerCase()
-                                    .localeCompare(
-                                      (optionB?.label ?? '').toLowerCase(),
-                                    )
-                                }
+                                size="large"
                                 options={FIELD_OPTION}
                               />
                             </Form.Item>
@@ -152,6 +193,7 @@ export default function FormTemplatet({
                             <FormLabel label={'Title input'} require />
                             <Form.Item {...restField} name={[name, 'label']}>
                               <Input
+                                size="large"
                                 className={'font-medium'}
                                 placeholder={'Enter title'}
                               />
@@ -195,10 +237,7 @@ export default function FormTemplatet({
               <Button loading={loading} type={'primary'} htmlType={'submit'}>
                 {!id ? 'Create' : 'Update'}
               </Button>
-              <Button
-                type={'primary'}
-                onClick={() => router.push(`/form/${initialValues?.slug}`)}
-              >
+              <Button type={'primary'} onClick={() => setShowFormLayout(true)}>
                 Share
               </Button>
             </Space>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Row, Col, Button, Switch, List, Pagination, Select } from 'antd'
+import { Row, Col, Button, Switch, List, Pagination } from 'antd'
 import { getAllStaffApi, updateStaffApi } from '~/services/apis'
 import { useRouter } from 'next/router'
 import { GetListParams } from '~/interfaces'
