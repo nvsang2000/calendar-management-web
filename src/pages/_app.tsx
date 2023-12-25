@@ -17,6 +17,7 @@ const routesNoNeedDefaultLayout = [
   '/admin/orders/print',
   '/book-appointment/[id]',
   '/404',
+  '/403',
 ]
 
 function MyApp({

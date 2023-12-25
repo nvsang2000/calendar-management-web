@@ -16,6 +16,10 @@ interface FetchDto {
 // API pulic web
 export const getFormPublicApi = (id: any) =>
   axiosInstance.get(`/api/form/${id}`)
+export const getUserPublicApi = (id: string) =>
+  axiosInstance.get(`/api/user/${id}`)
+export const createCalendarPublicApi = (payload: any) =>
+  axiosInstance.post('/api/calendar', payload)
 
 // API policy
 export const getPoliciesApi = (payload: FetchDto & { isActive?: boolean }) =>

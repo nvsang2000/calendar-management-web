@@ -13,7 +13,7 @@ import GroupForm from './GroupForm'
 import StaffSelect from './StaffSelect'
 import { DatePicker, RangePicker } from './DatePicker'
 import GroupsSelect from './GroupSelect'
-
+import BookingForm from './BookingForm'
 export {
   Svg,
   Header,
@@ -31,4 +31,5 @@ export {
   RangePicker,
   StaffSelect,
   GroupsSelect,
+  BookingForm,
 }

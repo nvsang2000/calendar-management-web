@@ -28,7 +28,6 @@ export default function FormTemplatet({
   onSubmit = () => {},
 }: BaseFormProps) {
   const router = useRouter()
-  const { currentUser } = useAuth()
   const [form] = Form.useForm()
   const [showFormLayout, setShowFormLayout] = useState(false)
   const watchCustomField = Form.useWatch('customFields', form)
@@ -47,7 +46,6 @@ export default function FormTemplatet({
   const layoutForm = () => {
     const formLink = `${process.env.NEXT_PUBLIC_ENV_CLIENT_URL}book-appointment/${initialValues?.slug}`
     form.setFieldValue('formLink', formLink)
-    console.log('formLink', formLink)
     return (
       <>
         <Modal
@@ -58,7 +56,7 @@ export default function FormTemplatet({
             <Button
               className="bg-[var(--green)]"
               key={'cancel'}
-              //onClick={() => setShowLayoutUpdate(false)}
+              onClick={() => setShowFormLayout(false)}
             >
               Cancel
             </Button>,
@@ -74,9 +72,9 @@ export default function FormTemplatet({
               <Input placeholder={'Link form'} />
             </Form.Item>
 
-            <FormLabel label={'Description'} />
+            <FormLabel label={'Generate script'} />
             <Form.Item name="description">
-              <TextArea rows={4} placeholder="Enter description" />
+              <TextArea rows={10} placeholder="Enter description" />
             </Form.Item>
           </div>
         </Modal>

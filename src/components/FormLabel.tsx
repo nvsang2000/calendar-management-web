@@ -26,7 +26,7 @@ export default function FormLabel({
         <div className={''}>
           <span
             className={
-              'mb-[6px] text-[14px] text-black sm:text-[14pxpx] md:text-[14px] lg:text-[16px] xl:text-[16px]'
+              'mb-[6px] text-[14px] capitalize text-black sm:text-[14pxpx] md:text-[14px] lg:text-[16px] xl:text-[16px]'
             }
           >
             {label}

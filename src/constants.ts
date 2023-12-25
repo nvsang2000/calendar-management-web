@@ -83,25 +83,32 @@ export const MEETING_FORMAT = [
   },
 ]
 
+export enum FIELD_TYPE {
+  PHONE = 'phone',
+  EMAIL = 'email',
+  TEXT = 'text',
+  CHECK = 'check',
+  TEXT_AREA = 'textArea',
+}
 export const FIELD_OPTION = [
   {
-    value: 'PHONE',
+    value: 'phone',
     label: 'Phone number',
   },
   {
-    value: 'EMAIL',
+    value: 'email',
     label: 'Email',
   },
   {
-    value: 'TEXT',
+    value: 'text',
     label: 'Text box',
   },
   {
-    value: 'CHECK',
+    value: 'check',
     label: 'Check box',
   },
   {
-    value: 'TEXT_AREA',
+    value: 'textArea',
     label: 'Text area',
   },
 ]
