@@ -92,6 +92,18 @@ export const updateFormApi = (id: string, params: any) =>
 export const createFormApi = (params: any) =>
   axiosInstance.post('/forms', params)
 
+// API calendar
+export const getAllCalendarApi = (payload: FetchDto) =>
+  axiosInstance.get(`/calendar?${queryString.stringify(payload)}`)
+export const getCalendarApi = (id: string) =>
+  axiosInstance.get(`/calendar/${id}`)
+export const deleteCalendarApi = (id: string) =>
+  axiosInstance.delete(`/calendar/${id}`)
+export const updateCalendarApi = (id: string, params: any) =>
+  axiosInstance.put(`/calendar/${id}`, params)
+export const createCalendarApi = (params: any) =>
+  axiosInstance.post('/calendar', params)
+
 export const uploadImage = async (file: File) => {
   const formData = new FormData()
   formData.append('image', file)
