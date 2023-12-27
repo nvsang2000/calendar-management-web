@@ -53,9 +53,6 @@ h6 {
   color: var(--green);
 }
 
-:where(.css-dev-only-do-not-override-6j9yrn).ant-btn-primary {
-  background-color: var(--green);
-}
 
 .ant-layout-header {
   background: white;

@@ -28,7 +28,13 @@ function MyApp({
   ...appProps
 }: AppProps & any) {
   if (routesNoNeedDefaultLayout.includes(appProps.router.pathname))
-    return <Component {...pageProps} />
+    return (
+      <StyleProvider hashPriority="high">
+        <ConfigProvider theme={{ ...THEME_DEFAULD }}>
+          <Component {...pageProps} />
+        </ConfigProvider>
+      </StyleProvider>
+    )
 
   return (
     <SWRConfig value={{ provider: localStorageProvider }}>

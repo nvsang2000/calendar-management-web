@@ -1,4 +1,5 @@
 import { Button, Col, DatePicker, Form, Input, Row, Select } from 'antd'
+import { useRouter } from 'next/router'
 import { useEffect, useMemo } from 'react'
 import { FIELD_TYPE } from '~/constants'
 import { BaseFormProps } from '~/interfaces'
@@ -9,6 +10,7 @@ export default function BookingForm({
   loading = false,
 }: BaseFormProps) {
   const [form] = Form.useForm()
+  const router = useRouter()
 
   useEffect(() => {
     if (Object.keys(initialValues)?.length > 0) {
@@ -74,6 +76,17 @@ export default function BookingForm({
               />
             </Form.Item>
 
+            <Form.Item
+              name={['owner', 'email']}
+              rules={[{ required: true, message: 'Please enter email!' }]}
+            >
+              <Input
+                size="large"
+                className={'font-medium'}
+                placeholder={`Enter email`}
+              />
+            </Form.Item>
+
             {initialValues?.fields?.map(
               ({ label, type, required }: any, key: number) => {
                 if (type === FIELD_TYPE.PHONE)
@@ -100,28 +113,6 @@ export default function BookingForm({
                       </Form.Item>
                     </div>
                   )
-                if (type === FIELD_TYPE.EMAIL)
-                  return (
-                    <div key={key}>
-                      <Form.Item
-                        name={['owner', type]}
-                        {...(required && {
-                          rules: [
-                            {
-                              required: true,
-                              message: `Please enter ${label}!`,
-                            },
-                          ],
-                        })}
-                      >
-                        <Input
-                          size="large"
-                          className={'font-medium'}
-                          placeholder={`Enter ${label}`}
-                        />
-                      </Form.Item>
-                    </div>
-                  )
               },
             )}
             <Form.Item name="note">
@@ -129,8 +120,13 @@ export default function BookingForm({
             </Form.Item>
 
             <Form.Item>
-              <Button type="primary" htmlType="submit" loading={loading}>
-                Booking
+              <Button
+                size="large"
+                type="primary"
+                htmlType="submit"
+                loading={loading}
+              >
+                Book with google account
               </Button>
             </Form.Item>
           </Form>

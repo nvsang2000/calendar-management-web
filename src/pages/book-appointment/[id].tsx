@@ -37,9 +37,16 @@ export default function FormViewPage() {
       deadline: values?.deadline ? dayjsInstance(values?.deadline) : undefined,
       owner: JSON.stringify(values?.owner),
     }
-    await createCalendarPublicApi(submitValue).then((res) => {
-      if (res) {
+    console.log('submitValue', submitValue)
+
+    await createCalendarPublicApi(submitValue).then(({ data }) => {
+      if (data) {
         setLoading(false)
+        console.log('res', data)
+        window.open(
+          `http://localhost/calendar/auth/google?cld=${data?.id}`,
+          '_blank',
+        )
         message.success('Booking successful!')
       }
     })
