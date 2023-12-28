@@ -6,6 +6,7 @@ import { BookingForm } from '~/components'
 import { parseSafe } from '~/helpers'
 import { createCalendarPublicApi, getFormPublicApi } from '~/services/apis'
 import dayjsInstance from '~/utils/dayjs'
+import Cookies from 'js-cookie'
 
 export default function FormViewPage() {
   const router = useRouter()
@@ -39,6 +40,8 @@ export default function FormViewPage() {
     }
     console.log('submitValue', submitValue)
 
+    const stringValue = JSON.stringify(submitValue)
+    Cookies.set('booking-data', stringValue, { expires: 2 })
     await createCalendarPublicApi(submitValue).then(({ data }) => {
       if (data) {
         setLoading(false)
