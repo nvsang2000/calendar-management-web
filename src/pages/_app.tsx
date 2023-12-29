@@ -63,6 +63,7 @@ MyApp.getInitialProps = async ({ ctx }: { ctx: any }) => {
   const { publicRuntimeConfig } = getConfig()
   const baseURL = publicRuntimeConfig.NEXT_PUBLIC_ENV_API_URL
 
+  if (routesNoNeedDefaultLayout.includes(pathname)) return {}
   const redirectOnError = () =>
     res && !routesNoNeedAuth.includes(pathname)
       ? res.writeHead(302, { Location: '/login' }).end()

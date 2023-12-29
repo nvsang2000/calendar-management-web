@@ -1,8 +1,18 @@
 import { Button, Col, DatePicker, Form, Input, Row, Select } from 'antd'
 import { useRouter } from 'next/router'
-import { useEffect, useMemo } from 'react'
+import { FormEvent, useEffect, useMemo } from 'react'
 import { FIELD_TYPE } from '~/constants'
 import { BaseFormProps } from '~/interfaces'
+import {
+  useSession,
+  signIn,
+  signOut,
+  getCsrfToken,
+  getProviders,
+  SessionContext,
+  SignInAuthorizationParams,
+  getSession,
+} from 'next-auth/react'
 
 export default function BookingForm({
   initialValues = {},
@@ -10,7 +20,6 @@ export default function BookingForm({
   loading = false,
 }: BaseFormProps) {
   const [form] = Form.useForm()
-  const router = useRouter()
 
   useEffect(() => {
     if (Object.keys(initialValues)?.length > 0) {
@@ -76,16 +85,29 @@ export default function BookingForm({
               />
             </Form.Item>
 
-            <Form.Item
-              name={['owner', 'email']}
-              rules={[{ required: true, message: 'Please enter email!' }]}
-            >
-              <Input
-                size="large"
-                className={'font-medium'}
-                placeholder={`Enter email`}
-              />
-            </Form.Item>
+            <Row gutter={20}>
+              <Col flex={1}>
+                <Form.Item
+                  name={['owner', 'email']}
+                  rules={[{ required: true, message: 'Please enter email!' }]}
+                >
+                  <Input
+                    size="large"
+                    className={'font-medium'}
+                    placeholder={`Enter email`}
+                  />
+                </Form.Item>
+              </Col>
+              <Col>
+                <Button
+                  size="large"
+                  type="primary"
+                  onClick={() => signIn('google')}
+                >
+                  Login google
+                </Button>
+              </Col>
+            </Row>
 
             {initialValues?.fields?.map(
               ({ label, type, required }: any, key: number) => {
