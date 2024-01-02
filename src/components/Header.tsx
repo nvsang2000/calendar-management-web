@@ -63,7 +63,7 @@ const CustomHeader: React.FC = ({}) => {
                   <div>
                     <div
                       className={
-                        'hover:text-primary-color mx-[8px] flex cursor-pointer items-center gap-[4px]'
+                        'mx-[8px] flex cursor-pointer items-center gap-[4px] hover:text-primary-color'
                       }
                       onClick={() => router.push('/admin/account')}
                     >
@@ -79,7 +79,7 @@ const CustomHeader: React.FC = ({}) => {
                     </div>
                     <div
                       className={
-                        'hover:text-primary-color mx-[8px] flex cursor-pointer items-center gap-[4px]'
+                        'mx-[8px] flex cursor-pointer items-center gap-[4px] hover:text-primary-color'
                       }
                       onClick={logout}
                     >

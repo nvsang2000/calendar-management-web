@@ -1,41 +1,34 @@
-import Cookies from 'js-cookie'
-import NextAuth from 'next-auth'
+import NextAuth, { AuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
-import { setCookie } from 'nookies'
 
-export const authOptions = {
+export const authOptions: AuthOptions = {
+  secret: process.env.NEXT_PUBLIC_ENV_JWT_SECRET,
   providers: [
     GoogleProvider({
       clientId: process.env.NEXT_PUBLIC_ENV_CLIENT_ID as string,
       clientSecret: process.env.NEXT_PUBLIC_ENV_CLIENT_SECRET as string,
       authorization: {
-        request: (contex) => {
-          console.log('contex', contex)
-        },
         params: {
           prompt: 'consent',
           access_type: 'offline',
           response_type: 'code',
+          scope:
+            'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar',
         },
       },
     }),
   ],
-
   callbacks: {
     async jwt({ token, account, profile }: any) {
       if (account) {
         token.accessToken = account.access_token
         token.id = profile.id
-        Cookies.set('account', account, { expires: 2 })
+        account.email = token.email
       }
-      return { token, account }
-    },
-    async redirect({ url }: any) {
-      return url
+      return { token, account, profile }
     },
     async session({ session, token, user }: any) {
-      // Send properties to the client, like an access_token from a provider.
-      session.accessToken = token.accessToken
+      session.user = token?.token?.account
       return session
     },
   },

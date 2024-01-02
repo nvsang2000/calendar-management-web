@@ -53,8 +53,6 @@ export default function UserPage() {
       policyId: role !== ROLE.admin ? values?.policyId : undefined,
     }
 
-    console.log('submitValues', submitValues)
-
     const hideMessage = message.loading('')
     setLoading(true)
     try {

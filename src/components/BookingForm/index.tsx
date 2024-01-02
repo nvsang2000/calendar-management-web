@@ -1,18 +1,9 @@
 import { Button, Col, DatePicker, Form, Input, Row, Select } from 'antd'
-import { useRouter } from 'next/router'
-import { FormEvent, useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { FIELD_TYPE } from '~/constants'
 import { BaseFormProps } from '~/interfaces'
-import {
-  useSession,
-  signIn,
-  signOut,
-  getCsrfToken,
-  getProviders,
-  SessionContext,
-  SignInAuthorizationParams,
-  getSession,
-} from 'next-auth/react'
+import { signIn } from 'next-auth/react'
+import Cookies from 'js-cookie'
 
 export default function BookingForm({
   initialValues = {},
@@ -20,6 +11,7 @@ export default function BookingForm({
   loading = false,
 }: BaseFormProps) {
   const [form] = Form.useForm()
+  const watchFormData = Form.useWatch('formData', form)
 
   useEffect(() => {
     if (Object.keys(initialValues)?.length > 0) {
@@ -29,40 +21,43 @@ export default function BookingForm({
 
   const optionStaff = useMemo(() => {
     const option = initialValues?.staff?.map((i: any) => ({
-      value: i?.id,
+      value: i?.email,
       label: `${i?.firstName} ${i?.lastName}`,
     }))
     return option
   }, [initialValues])
 
+  const handleAuthGoogle = async () => {
+    await Cookies.set('formData', JSON.stringify(watchFormData), { expires: 1 })
+    return signIn('google')
+  }
+
   return (
-    <div className="mt-[20px]">
+    <div className="mt-[40px]">
       <Row justify={'center'} align={'middle'} style={{ height: '300px' }}>
         <Col lg={14} xs={22} style={{ maxWidth: 512 }}>
-          <div className="my-[10px] text-center text-[16px] font-medium capitalize text-[var(--green)] sm:text-[16px] md:text-[16px] lg:text-[16px] xl:text-[26px]">
-            Contact us to schedule an appointment
-          </div>
           <Form
             layout="vertical"
             initialValues={initialValues}
             form={form}
             onFinish={onSubmit}
           >
+            <Form.Item className="hidden" name={'formId'} />
             <Row gutter={20}>
               <Col xs={24} lg={12}>
-                <Form.Item name={['owner', 'firstName']}>
+                <Form.Item name={['formData', 'firstName']}>
                   <Input size="large" placeholder="Enter first name" />
                 </Form.Item>
               </Col>
               <Col xs={24} lg={12}>
-                <Form.Item name={['owner', 'lastName']}>
+                <Form.Item name={['formData', 'lastName']}>
                   <Input size="large" placeholder="Enter last name" />
                 </Form.Item>
               </Col>
             </Row>
 
             <Form.Item
-              name="deadline"
+              name={['formData', 'deadline']}
               rules={[{ required: true, message: 'Please select a date!' }]}
             >
               <DatePicker
@@ -73,7 +68,7 @@ export default function BookingForm({
             </Form.Item>
 
             <Form.Item
-              name="userId"
+              name={['formData', 'ownerEmail']}
               rules={[{ required: true, message: 'Please select staff!' }]}
             >
               <Select
@@ -88,24 +83,30 @@ export default function BookingForm({
             <Row gutter={20}>
               <Col flex={1}>
                 <Form.Item
-                  name={['owner', 'email']}
+                  name={['formData', 'email']}
                   rules={[{ required: true, message: 'Please enter email!' }]}
                 >
                   <Input
                     size="large"
+                    disabled={initialValues?.formData?.isAuth}
                     className={'font-medium'}
                     placeholder={`Enter email`}
                   />
                 </Form.Item>
               </Col>
               <Col>
-                <Button
-                  size="large"
-                  type="primary"
-                  onClick={() => signIn('google')}
+                <Form.Item
+                  name={['formData', 'isAuth']}
+                  rules={[{ required: true, message: 'Authentication!' }]}
                 >
-                  Login google
-                </Button>
+                  <Button
+                    size="large"
+                    type="primary"
+                    onClick={() => handleAuthGoogle()}
+                  >
+                    Google
+                  </Button>
+                </Form.Item>
               </Col>
             </Row>
 
@@ -115,7 +116,7 @@ export default function BookingForm({
                   return (
                     <div key={key}>
                       <Form.Item
-                        name={['owner', type]}
+                        name={['formData', type]}
                         {...(required && {
                           rules: [
                             {
@@ -137,7 +138,7 @@ export default function BookingForm({
                   )
               },
             )}
-            <Form.Item name="note">
+            <Form.Item name={['formData', 'note']}>
               <Input.TextArea size="large" rows={4} placeholder="Enter note" />
             </Form.Item>
 

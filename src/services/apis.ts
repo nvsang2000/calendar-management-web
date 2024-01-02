@@ -1,4 +1,3 @@
-import axios from 'axios'
 import axiosInstance from '../utils/axios'
 import queryString from 'query-string'
 
@@ -18,8 +17,8 @@ export const getFormPublicApi = (id: any) =>
   axiosInstance.get(`/api/form/${id}`)
 export const getUserPublicApi = (id: string) =>
   axiosInstance.get(`/api/user/${id}`)
-export const createCalendarPublicApi = (payload: any) =>
-  axiosInstance.post('/api/calendar', payload)
+export const createEventCalendarApi = (payload: any) =>
+  axiosInstance.post('/api/event', payload)
 
 // API policy
 export const getPoliciesApi = (payload: FetchDto & { isActive?: boolean }) =>

@@ -11,6 +11,7 @@ import getConfig from 'next/config'
 import { StyleProvider } from '@ant-design/cssinjs'
 import { ConfigProvider, theme } from 'antd'
 import { THEME_DEFAULD } from '~/constants'
+import { SessionProvider } from 'next-auth/react'
 
 const routesNoNeedAuth = ['/login']
 const routesNoNeedDefaultLayout = [
@@ -29,11 +30,13 @@ function MyApp({
 }: AppProps & any) {
   if (routesNoNeedDefaultLayout.includes(appProps.router.pathname))
     return (
-      <StyleProvider hashPriority="high">
-        <ConfigProvider theme={{ ...THEME_DEFAULD }}>
-          <Component {...pageProps} />
-        </ConfigProvider>
-      </StyleProvider>
+      <SessionProvider session={pageProps?.session}>
+        <StyleProvider hashPriority="high">
+          <ConfigProvider theme={{ ...THEME_DEFAULD }}>
+            <Component {...pageProps} />
+          </ConfigProvider>
+        </StyleProvider>
+      </SessionProvider>
     )
 
   return (

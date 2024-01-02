@@ -1,58 +1,56 @@
 import { Spin, message } from 'antd'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useEffectOnce } from 'react-use'
 import { BookingForm } from '~/components'
 import { parseSafe } from '~/helpers'
-import { createCalendarPublicApi, getFormPublicApi } from '~/services/apis'
+import { createEventCalendarApi, getFormPublicApi } from '~/services/apis'
 import dayjsInstance from '~/utils/dayjs'
 import Cookies from 'js-cookie'
+import { useSession } from 'next-auth/react'
 
 export default function FormViewPage() {
   const router = useRouter()
   const id = router.query.id + ''
   const [loading, setLoading] = useState<boolean>(false)
   const [initialValues, setInitialValues] = useState<any>({})
-
-  const fetchForm = async () => {
-    setLoading(true)
-    await getFormPublicApi(router.query.id)
-      .then((res) => {
-        const data = res?.data
-        const fields = parseSafe(data?.fields)
-        if (!data) return router.push('/404')
-        setInitialValues({ ...data, fields })
-      })
-      .finally(() => setLoading(false))
-  }
+  const { data: session } = useSession()
+  const formData: any = Cookies.get('formData')
+  const user: any = Cookies.get('user')
+  const paserUser = parseSafe(user)
+  const parserData = parseSafe(formData)
 
   useEffectOnce(() => {
-    fetchForm()
+    getFormPublicApi(router.query.id).then(async (res) => {
+      const data = res?.data
+      const fields = parseSafe(data?.fields)
+      const newFormData = {
+        ...parserData,
+        isAuth: paserUser ? true : undefined,
+        ownerEmail: paserUser?.email,
+        deadline: parserData?.deadline
+          ? dayjsInstance(parserData?.deadline)
+          : undefined,
+      }
+
+      if (!data) return router.push('/404')
+      setInitialValues({ ...data, formData: newFormData, fields })
+    })
   })
 
+  useEffect(() => {
+    if (session?.user) console.log('session?.user', session?.user)
+    Cookies.set('user', JSON.stringify(session?.user), { expires: 30 })
+  }, [session])
+
   const handleSubmit = async (values: any) => {
-    setLoading(true)
     const submitValue = {
       ...values,
-      formId: initialValues?.id,
-      deadline: values?.deadline ? dayjsInstance(values?.deadline) : undefined,
-      owner: JSON.stringify(values?.owner),
+      accessToken: paserUser?.access_token,
     }
-    console.log('submitValue', submitValue)
 
-    const stringValue = JSON.stringify(submitValue)
-    Cookies.set('booking-data', stringValue, { expires: 2 })
-    await createCalendarPublicApi(submitValue).then(({ data }) => {
-      if (data) {
-        setLoading(false)
-        console.log('res', data)
-        window.open(
-          `http://localhost/calendar/auth/google?cld=${data?.id}`,
-          '_blank',
-        )
-        message.success('Booking successful!')
-      }
-    })
+    await createEventCalendarApi(submitValue)
+    return message.success('Booking successful!')
   }
 
   if (loading)
