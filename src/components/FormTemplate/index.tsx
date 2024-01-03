@@ -47,7 +47,7 @@ export default function FormTemplatet({
   }, [form, initialValues])
 
   const layoutForm = () => {
-    const formLink = `${clientUrl}book-appointment/${initialValues?.slug}`
+    const formLink = `${clientUrl}booking/${initialValues?.slug}`
     const generateHtml = generateScriptForm(formLink)
     form.setFieldValue('formLink', formLink)
     form.setFieldValue('generateScript', generateHtml)
