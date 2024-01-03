@@ -21,16 +21,11 @@ export default function BookingForm({
 
   const optionStaff = useMemo(() => {
     const option = initialValues?.staff?.map((i: any) => ({
-      value: i?.email,
+      value: i?.id,
       label: `${i?.firstName} ${i?.lastName}`,
     }))
     return option
   }, [initialValues])
-
-  const handleAuthGoogle = async () => {
-    await Cookies.set('formData', JSON.stringify(watchFormData), { expires: 1 })
-    return signIn('google')
-  }
 
   return (
     <div className="mt-[40px]">
@@ -57,7 +52,7 @@ export default function BookingForm({
             </Row>
 
             <Form.Item
-              name={['formData', 'deadline']}
+              name={'deadline'}
               rules={[{ required: true, message: 'Please select a date!' }]}
             >
               <DatePicker
@@ -68,7 +63,7 @@ export default function BookingForm({
             </Form.Item>
 
             <Form.Item
-              name={['formData', 'ownerEmail']}
+              name={'userId'}
               rules={[{ required: true, message: 'Please select staff!' }]}
             >
               <Select
@@ -80,35 +75,17 @@ export default function BookingForm({
               />
             </Form.Item>
 
-            <Row gutter={20}>
-              <Col flex={1}>
-                <Form.Item
-                  name={['formData', 'email']}
-                  rules={[{ required: true, message: 'Please enter email!' }]}
-                >
-                  <Input
-                    size="large"
-                    disabled={initialValues?.formData?.isAuth}
-                    className={'font-medium'}
-                    placeholder={`Enter email`}
-                  />
-                </Form.Item>
-              </Col>
-              <Col>
-                <Form.Item
-                  name={['formData', 'isAuth']}
-                  rules={[{ required: true, message: 'Authentication!' }]}
-                >
-                  <Button
-                    size="large"
-                    type="primary"
-                    onClick={() => handleAuthGoogle()}
-                  >
-                    Google
-                  </Button>
-                </Form.Item>
-              </Col>
-            </Row>
+            <Form.Item
+              name={['formData', 'email']}
+              rules={[{ required: true, message: 'Please enter email!' }]}
+            >
+              <Input
+                size="large"
+                disabled={initialValues?.formData?.isAuth}
+                className={'font-medium'}
+                placeholder={`Enter email`}
+              />
+            </Form.Item>
 
             {initialValues?.fields?.map(
               ({ label, type, required }: any, key: number) => {
@@ -149,7 +126,7 @@ export default function BookingForm({
                 htmlType="submit"
                 loading={loading}
               >
-                Book with google account
+                Booking
               </Button>
             </Form.Item>
           </Form>

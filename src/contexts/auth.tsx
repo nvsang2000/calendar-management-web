@@ -87,7 +87,7 @@ export const AuthProvider = ({ children }: { children?: JSX.Element }) => {
         }
 
         setCurrentUser(data)
-        router.push('/')
+        router.push('/admin')
       }
     } catch (e: any) {
       console.log(e.message)

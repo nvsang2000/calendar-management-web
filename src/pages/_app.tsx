@@ -9,14 +9,13 @@ import nextCookies from 'next-cookies'
 import { AuthProvider } from '~/contexts/auth'
 import getConfig from 'next/config'
 import { StyleProvider } from '@ant-design/cssinjs'
-import { ConfigProvider, theme } from 'antd'
+import { ConfigProvider } from 'antd'
 import { THEME_DEFAULD } from '~/constants'
-import { SessionProvider } from 'next-auth/react'
 
 const routesNoNeedAuth = ['/login']
 const routesNoNeedDefaultLayout = [
   '/admin/orders/print',
-  '/book-appointment/[id]',
+  '/booking/[id]',
   '/404',
   '/403',
 ]
@@ -30,13 +29,11 @@ function MyApp({
 }: AppProps & any) {
   if (routesNoNeedDefaultLayout.includes(appProps.router.pathname))
     return (
-      <SessionProvider session={pageProps?.session}>
-        <StyleProvider hashPriority="high">
-          <ConfigProvider theme={{ ...THEME_DEFAULD }}>
-            <Component {...pageProps} />
-          </ConfigProvider>
-        </StyleProvider>
-      </SessionProvider>
+      <StyleProvider hashPriority="high">
+        <ConfigProvider theme={{ ...THEME_DEFAULD }}>
+          <Component {...pageProps} />
+        </ConfigProvider>
+      </StyleProvider>
     )
 
   return (

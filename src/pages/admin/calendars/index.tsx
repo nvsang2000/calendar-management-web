@@ -77,32 +77,6 @@ const CalendarPage: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params])
 
-  const fetchDetail = async (id: string) => {
-    return await getCalendarApi(id).then((res: any) => {
-      const business = res?.data
-      setInitValues({ ...business })
-    })
-  }
-
-  const onSubmit = async (values: any) => {
-    try {
-      if (updateId && updateId !== 'create') {
-        await updateCalendarApi(updateId, values)
-        message.success('Update successful!')
-      } else {
-        await createCalendarApi(values)
-        message.success('Create new successful!')
-      }
-
-      setUpdateting(false)
-      setShowLayoutUpdate(false)
-    } catch (error) {
-      console.log(error)
-    } finally {
-      fetchCalendars()
-    }
-  }
-
   const removeCalendar = async () => {
     try {
       await deleteCalendarApi(updateId).finally(() => {
@@ -181,15 +155,8 @@ const CalendarPage: React.FC = () => {
           }
           description={
             <div className={'cursor-pointer text-[color:var(--text-color)]'}>
-              <div
-                onClick={() => {
-                  setShowLayoutUpdate(true)
-                  setUpdateId(item?.id)
-                  fetchDetail(item?.id)
-                }}
-                className="text-[13px] capitalize sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px] "
-              >
-                <div>{item?.name}</div>
+              <div className="text-[13px] capitalize sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px] ">
+                <div className="font-medium text-[color:var(--text-color)]">{`${item?.user?.firstName} ${item?.user?.lastName}`}</div>
                 <div
                   className={
                     'lg-[13px]  text-[12px] font-light italic text-[color:var(--primary-color)] sm:text-[13px] md:text-[13px] xl:text-[13px]'

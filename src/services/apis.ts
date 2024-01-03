@@ -18,7 +18,7 @@ export const getFormPublicApi = (id: any) =>
 export const getUserPublicApi = (id: string) =>
   axiosInstance.get(`/api/user/${id}`)
 export const createEventCalendarApi = (payload: any) =>
-  axiosInstance.post('/api/event', payload)
+  axiosInstance.post('/api/booking', payload)
 
 // API policy
 export const getPoliciesApi = (payload: FetchDto & { isActive?: boolean }) =>

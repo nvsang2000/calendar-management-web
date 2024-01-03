@@ -182,7 +182,7 @@ const CustomSider = ({}) => {
                     label: (
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         <span
-                          className={`ml-[4px] inline-block text-[14px] hover:text-primary-color ${
+                          className={`hover:text-primary-color ml-[4px] inline-block text-[14px] ${
                             currentPath === subItem.href
                               ? 'text-primary-color'
                               : 'text-black'
@@ -209,7 +209,7 @@ const CustomSider = ({}) => {
         : {
             label: (
               <span
-                className={`text-[14px] hover:text-primary-color ${
+                className={`hover:text-primary-color text-[14px] ${
                   currentPath === item.href
                     ? 'selected-menu-item text-[color:var(--primary-color)]'
                     : 'text-black'
@@ -246,7 +246,7 @@ const CustomSider = ({}) => {
             <div
               className={'fixed inset-y-0 left-0 w-[250px] hover:overflow-auto'}
             >
-              <Link href="/">
+              <Link href="/admin">
                 <div className={'flex cursor-pointer p-[10px] px-5'}>
                   <Image
                     preview={false}
@@ -309,7 +309,7 @@ const CustomSider = ({}) => {
     <div
       className={`flex ${isTablet ? 'justify-center' : 'pl-[60px]'}  bg-white`}
     >
-      <div onClick={() => router.push('/')} className={'my-[10px]'}>
+      <div onClick={() => router.push('/admin')} className={'my-[10px]'}>
         <Image
           preview={false}
           className="mb-[10px]"

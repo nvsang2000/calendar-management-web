@@ -72,3 +72,10 @@ export const convertDurationToTime = (duration: number): string => {
 }
 
 export const timeOneDay = 24 * 60 * 60 * 1000
+
+export const generateScriptForm = (url: string) => {
+  const html = `
+    <iframe src="${url}" height="800" width="600" title="Form booking"></iframe>
+  `
+  return html
+}

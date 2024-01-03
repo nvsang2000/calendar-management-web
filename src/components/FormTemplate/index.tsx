@@ -18,6 +18,7 @@ import GroupsSelect from '../GroupSelect'
 import { FIELD_OPTION, MEETING_FORMAT } from '~/constants'
 import { useEffect, useState } from 'react'
 import { useAuth } from '~/hooks'
+import { generateScriptForm } from '~/helpers'
 
 const { TextArea } = Input
 
@@ -31,6 +32,8 @@ export default function FormTemplatet({
   const [form] = Form.useForm()
   const [showFormLayout, setShowFormLayout] = useState(false)
   const watchCustomField = Form.useWatch('customFields', form)
+  const watchFormLink = Form.useWatch('formLink', form)
+  const watchGenerateScript = Form.useWatch('generateScript', form)
   const handleGoBack = () => {
     return router.back()
   }
@@ -45,7 +48,9 @@ export default function FormTemplatet({
 
   const layoutForm = () => {
     const formLink = `${process.env.NEXT_PUBLIC_ENV_CLIENT_URL}book-appointment/${initialValues?.slug}`
+    const generateHtml = generateScriptForm(formLink)
     form.setFieldValue('formLink', formLink)
+    form.setFieldValue('generateScript', generateHtml)
     return (
       <>
         <Modal
@@ -61,19 +66,27 @@ export default function FormTemplatet({
               Cancel
             </Button>,
             <Button key={'oke'} type={'primary'} onClick={() => form.submit()}>
-              oke
+              Ok
             </Button>,
           ]}
           destroyOnClose
         >
           <div className="mt-[20px] p-[10px]">
-            <FormLabel label={'Link form'} iconCoppy />
+            <FormLabel
+              label={'Link form'}
+              iconCoppy
+              valueCoppy={watchFormLink}
+            />
             <Form.Item name="formLink">
               <Input placeholder={'Link form'} />
             </Form.Item>
 
-            <FormLabel label={'Generate script'} />
-            <Form.Item name="description">
+            <FormLabel
+              label={'Generate script'}
+              iconCoppy
+              valueCoppy={watchGenerateScript}
+            />
+            <Form.Item name="generateScript">
               <TextArea rows={10} placeholder="Enter description" />
             </Form.Item>
           </div>

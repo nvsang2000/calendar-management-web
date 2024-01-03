@@ -73,9 +73,14 @@ const FromPage: React.FC = () => {
             '!border-[1px] !border-[color:var(--@very-light-gray)] p-[10px]'
           }
           description={
-            <div className={'cursor-pointer text-[color:var(--text-color)]'}>
+            <div
+              className={'cursor-pointer text-[color:var(--text-color)]'}
+              onClick={() => router.push(`/admin/forms/${item?.id}`)}
+            >
               <div className="text-[13px] capitalize sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px] ">
-                <div>{item?.name}</div>
+                <div className="font-medium text-[color:var(--text-color)]">
+                  {item?.name}
+                </div>
                 <div
                   className={
                     'lg-[13px]  text-[12px] font-light italic text-[color:var(--primary-color)] sm:text-[13px] md:text-[13px] xl:text-[13px]'
