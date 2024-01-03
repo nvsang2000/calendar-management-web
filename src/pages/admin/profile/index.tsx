@@ -4,9 +4,8 @@ import { FormLabel } from '~/components'
 import { useAuth } from '~/hooks'
 
 export default function ProfilePage() {
-  const { abilities, currentUser } = useAuth()
+  const { currentUser } = useAuth()
   const [form] = Form.useForm()
-  console.log('currentUser', currentUser)
   return (
     <>
       <Head>
@@ -24,7 +23,7 @@ export default function ProfilePage() {
           <Row align={'middle'} gutter={20}>
             <Col span={24}>
               <div className="mb-[20px] text-[20px] font-medium">
-                Account details Profile
+                Account Profile
               </div>
             </Col>
             <Col xs={24} lg={12}>

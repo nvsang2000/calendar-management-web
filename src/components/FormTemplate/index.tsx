@@ -12,13 +12,12 @@ import {
 import { BaseFormProps } from '~/interfaces'
 import FormLabel from '../FormLabel'
 import Svg from '../Svg'
-import { DatePicker } from '../DatePicker'
 import { useRouter } from 'next/router'
 import GroupsSelect from '../GroupSelect'
 import { FIELD_OPTION, MEETING_FORMAT } from '~/constants'
 import { useEffect, useState } from 'react'
-import { useAuth } from '~/hooks'
 import { generateScriptForm } from '~/helpers'
+import getConfig from 'next/config'
 
 const { TextArea } = Input
 
@@ -34,11 +33,12 @@ export default function FormTemplatet({
   const watchCustomField = Form.useWatch('customFields', form)
   const watchFormLink = Form.useWatch('formLink', form)
   const watchGenerateScript = Form.useWatch('generateScript', form)
+  const { publicRuntimeConfig } = getConfig()
+  const clientUrl = publicRuntimeConfig.NEXT_PUBLIC_ENV_CLIENT_URL
+
   const handleGoBack = () => {
     return router.back()
   }
-
-  console.log('watchCustomField', watchCustomField)
 
   useEffect(() => {
     if (Object.keys(initialValues)?.length > 0) {
@@ -47,7 +47,7 @@ export default function FormTemplatet({
   }, [form, initialValues])
 
   const layoutForm = () => {
-    const formLink = `${process.env.NEXT_PUBLIC_ENV_CLIENT_URL}book-appointment/${initialValues?.slug}`
+    const formLink = `${clientUrl}book-appointment/${initialValues?.slug}`
     const generateHtml = generateScriptForm(formLink)
     form.setFieldValue('formLink', formLink)
     form.setFieldValue('generateScript', generateHtml)

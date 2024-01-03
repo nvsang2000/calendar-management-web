@@ -2,8 +2,7 @@ import { Button, Col, DatePicker, Form, Input, Row, Select } from 'antd'
 import { useEffect, useMemo } from 'react'
 import { FIELD_TYPE } from '~/constants'
 import { BaseFormProps } from '~/interfaces'
-import { signIn } from 'next-auth/react'
-import Cookies from 'js-cookie'
+import getConfig from 'next/config'
 
 export default function BookingForm({
   initialValues = {},
@@ -11,7 +10,6 @@ export default function BookingForm({
   loading = false,
 }: BaseFormProps) {
   const [form] = Form.useForm()
-  const watchFormData = Form.useWatch('formData', form)
 
   useEffect(() => {
     if (Object.keys(initialValues)?.length > 0) {
