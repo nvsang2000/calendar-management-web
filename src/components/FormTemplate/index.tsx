@@ -244,12 +244,12 @@ export default function FormTemplatet({
             </Col>
           </Row>
           <Row gutter={40} className={'py-[40px] pl-[20px]'}>
-            <Space align="center">
+            <Space size={'large'} align="center">
               <Button loading={loading} type={'primary'} htmlType={'submit'}>
                 {!id ? 'Create' : 'Update'}
               </Button>
-              <Button type={'primary'} onClick={() => setShowFormLayout(true)}>
-                Share
+              <Button onClick={() => setShowFormLayout(true)}>
+                Using form
               </Button>
             </Space>
           </Row>
