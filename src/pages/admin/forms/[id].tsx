@@ -15,7 +15,7 @@ export default function UserPage() {
   const id = router.query.id + ''
 
   useEffectOnce(() => {
-    const isAccess = abilities?.can('read', 'form')
+    const isAccess = abilities?.can('read', 'Form')
     if (!isAccess) router.push('/403')
     return () => {
       isAccess === undefined

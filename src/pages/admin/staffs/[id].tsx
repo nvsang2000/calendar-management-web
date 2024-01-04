@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react'
 import UserForm from '~/components/UserForm'
 import { message } from 'antd'
 import {
-  createUserApi,
+  createStaffApi,
   deleteUserApi,
-  getUserApi,
-  updateUserApi,
+  getStaffApi,
+  updateStaffApi,
 } from '~/services/apis'
 import { ROLE } from '~/constants'
 import { useEffectOnce } from 'react-use'
@@ -30,7 +30,7 @@ export default function StaffPage() {
   useEffect(() => {
     if (id && id !== 'create') {
       const hideLoading = message.loading('Retrieving data.....')
-      getUserApi(id)
+      getStaffApi(id)
         .then((res) => {
           const user = res?.data
           if (user) {
@@ -56,10 +56,10 @@ export default function StaffPage() {
     setLoading(true)
     try {
       if (id && id !== 'create') {
-        await updateUserApi(id, submitValues)
+        await updateStaffApi(id, submitValues)
         message.success('Update successful!')
       } else {
-        await createUserApi(submitValues)
+        await createStaffApi(submitValues)
         message.success('Create new successful!')
       }
 

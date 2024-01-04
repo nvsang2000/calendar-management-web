@@ -1,12 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Row, Col, Button, List, Pagination, Modal, Form, message } from 'antd'
-import {
-  createCalendarApi,
-  deleteCalendarApi,
-  getAllCalendarApi,
-  getCalendarApi,
-  updateCalendarApi,
-} from '~/services/apis'
+import { deleteCalendarApi, getAllCalendarApi } from '~/services/apis'
 import { useRouter } from 'next/router'
 import { GetListParams } from '~/interfaces'
 import { useEffectOnce, useSetState } from 'react-use'
@@ -15,8 +9,9 @@ import { ExclamationCircleOutlined } from '@ant-design/icons'
 import dayjsInstance from '~/utils/dayjs'
 import queryString from 'query-string'
 import Head from 'next/head'
-// import { CalendarForm } from '~/components'
+import { signIn } from 'next-auth/react'
 import { useAuth } from '~/hooks'
+import { GoogleOutlined } from '@ant-design/icons'
 
 const DEFAULT_PARAMS: GetListParams = {
   search: '',
@@ -204,6 +199,13 @@ const CalendarPage: React.FC = () => {
             </Col>
           )}
         </Row>
+        <Button
+          icon={<GoogleOutlined className="text-white" />}
+          style={{ backgroundColor: 'var(--dark-blue)', marginBottom: 10 }}
+          onClick={() => signIn('google')}
+        >
+          <span className="text-white">Connect With Google</span>
+        </Button>
         <List
           grid={{ gutter: 20, xs: 1, sm: 1, md: 2, lg: 2, xl: 3, xxl: 4 }}
           loading={loading}

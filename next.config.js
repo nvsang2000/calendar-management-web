@@ -4,6 +4,7 @@ const nextConfig = {
   reactStrictMode: false,
   publicRuntimeConfig: {
     NEXT_PUBLIC_ENV_API_URL: process.env.NEXT_PUBLIC_ENV_API_URL,
+    NEXT_PUBLIC_ENV_CLIENT_URL: process.env.NEXT_PUBLIC_ENV_CLIENT_URL,
   },
   images: {
     dangerouslyAllowSVG: true,

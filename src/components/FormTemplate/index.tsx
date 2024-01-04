@@ -30,7 +30,7 @@ export default function FormTemplatet({
   const router = useRouter()
   const [form] = Form.useForm()
   const [showFormLayout, setShowFormLayout] = useState(false)
-  const watchCustomField = Form.useWatch('customFields', form)
+
   const watchFormLink = Form.useWatch('formLink', form)
   const watchGenerateScript = Form.useWatch('generateScript', form)
   const { publicRuntimeConfig } = getConfig()
