@@ -1,6 +1,6 @@
 import { Button, Col, DatePicker, Form, Input, Row, Select } from 'antd'
 import { useEffect, useMemo } from 'react'
-import { FIELD_TYPE } from '~/constants'
+import { FIELD_TYPE, OPTION_DURATION } from '~/constants'
 import { BaseFormProps } from '~/interfaces'
 import getConfig from 'next/config'
 
@@ -10,6 +10,9 @@ export default function BookingForm({
   loading = false,
 }: BaseFormProps) {
   const [form] = Form.useForm()
+
+  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  console.log('Múi giờ hiện tại của người dùng:', userTimezone)
 
   useEffect(() => {
     if (Object.keys(initialValues)?.length > 0) {
@@ -49,16 +52,33 @@ export default function BookingForm({
               </Col>
             </Row>
 
-            <Form.Item
-              name={'deadline'}
-              rules={[{ required: true, message: 'Please select a date!' }]}
-            >
-              <DatePicker
-                className="w-full"
-                placeholder="Select a date"
-                size="large"
-              />
-            </Form.Item>
+            <Row gutter={20}>
+              <Col xs={24} lg={12}>
+                <Form.Item
+                  name={'startTime'}
+                  rules={[{ required: true, message: 'Please select a date!' }]}
+                >
+                  <DatePicker
+                    className="w-full"
+                    placeholder="Select a date"
+                    size="large"
+                    showTime
+                    format="YYYY/MM/DD HH"
+                  />
+                </Form.Item>
+              </Col>
+              <Col xs={24} lg={12}>
+                <Form.Item name={'duration'}>
+                  <Select
+                    className="w-full"
+                    showSearch
+                    placeholder="Select duration"
+                    size="large"
+                    options={OPTION_DURATION}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
 
             <Form.Item
               name={'userId'}
@@ -74,7 +94,7 @@ export default function BookingForm({
             </Form.Item>
 
             <Form.Item
-              name={['formData', 'email']}
+              name={'email'}
               rules={[{ required: true, message: 'Please enter email!' }]}
             >
               <Input

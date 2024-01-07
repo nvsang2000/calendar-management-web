@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { Row, Col, Button, List, Pagination, Modal, Form, message } from 'antd'
-import { deleteCalendarApi, getAllCalendarApi } from '~/services/apis'
+import {
+  authGoogleApi,
+  deleteCalendarApi,
+  getAllCalendarApi,
+} from '~/services/apis'
 import { useRouter } from 'next/router'
 import { GetListParams } from '~/interfaces'
 import { useEffectOnce, useSetState } from 'react-use'
 import { numberFormat, parseSafe } from '~/helpers'
-import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { ExclamationCircleOutlined, GoogleOutlined } from '@ant-design/icons'
 import dayjsInstance from '~/utils/dayjs'
 import queryString from 'query-string'
 import Head from 'next/head'
-import { signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import { useAuth } from '~/hooks'
-import { GoogleOutlined } from '@ant-design/icons'
 
 const DEFAULT_PARAMS: GetListParams = {
   search: '',
@@ -20,14 +23,13 @@ const DEFAULT_PARAMS: GetListParams = {
 }
 const CalendarPage: React.FC = () => {
   const router = useRouter()
-  const { abilities } = useAuth()
+  const { abilities, currentUser } = useAuth()
   const [form] = Form.useForm()
-  const [Calendars, setCalendars] = useState([])
+  const [calendars, setCalendars] = useState([])
   const [loading, setLoading] = useState(false)
   const [meta, setMeta] = useState<any>({})
   const [updateting, setUpdateting] = useState(false)
   const [updateId, setUpdateId] = useState<any>('create')
-  const [initialValues, setInitValues] = useState()
   const [showLayoutUpdate, setShowLayoutUpdate] = useState(false)
   const [params, setParams] = useSetState<any>(
     Object.keys(router.query)?.length > 0
@@ -35,12 +37,21 @@ const CalendarPage: React.FC = () => {
       : { ...DEFAULT_PARAMS },
   )
 
+  const { data: session }: any = useSession()
+
+  console.log('currentUser', currentUser)
+
+  useEffect(() => {
+    const refreshToken: any = session?.user?.refresh_token
+    if (refreshToken) {
+      console.log('session', refreshToken)
+      authGoogleApi({ refreshToken })
+    }
+  }, [session?.user])
+
   useEffectOnce(() => {
     const isAccess = abilities?.can('read', 'Calendar')
     if (!isAccess) router.push('/403')
-    return () => {
-      isAccess === undefined
-    }
   })
 
   const fetchCalendars = async () => {
@@ -210,10 +221,10 @@ const CalendarPage: React.FC = () => {
           grid={{ gutter: 20, xs: 1, sm: 1, md: 2, lg: 2, xl: 3, xxl: 4 }}
           loading={loading}
           itemLayout="horizontal"
-          dataSource={Calendars}
+          dataSource={calendars}
           renderItem={renderItem}
         />
-        {Calendars?.length > 0 && (
+        {calendars?.length > 0 && (
           <Row className="flex justify-between">
             <Col></Col>
             <Col className={'flex'}>

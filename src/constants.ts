@@ -113,6 +113,12 @@ export const FIELD_OPTION = [
   },
 ]
 
+export const OPTION_DURATION = [
+  { value: '15ms', label: '15 Minutes Meeting' },
+  { value: '30ms', label: '30 Minutes Meeting' },
+  { value: '60ms', label: '60 Minutes Meeting' },
+]
+
 export const LINK_WEBSITE_PATTERN =
   /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/
 
@@ -136,7 +142,7 @@ export const ICON_LINK: any = {
   default: DEFAULT_IMAGE,
 }
 
-export const THEME_DEFAULD: ThemeConfig = {
+export const THEME_DEFAULT: ThemeConfig = {
   token: {
     colorPrimary: '#029147',
     colorBgContainer: 'white',

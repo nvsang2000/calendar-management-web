@@ -26,6 +26,7 @@ export default function FormViewPage() {
   const handleSubmit = async (values: any) => {
     const submitValue = {
       ...values,
+      endTime: dayjsInstance(values?.startDay).add(30, 'minutes')
     }
 
     await createEventCalendarApi(submitValue)

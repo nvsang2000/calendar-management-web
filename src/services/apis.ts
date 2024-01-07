@@ -42,6 +42,7 @@ export const logoutApi = () => axiosInstance.get('/auth/logout')
 export const whoAmI = () => axiosInstance.get('/auth/profile')
 export const registerApi = (params: any) =>
   axiosInstance.post('/auth/signup', params)
+export const authGoogleApi = (params: any) => axiosInstance.put('/auth/google', params)
 
 // API user
 export const getAllUserApi = (payload: FetchDto) =>
