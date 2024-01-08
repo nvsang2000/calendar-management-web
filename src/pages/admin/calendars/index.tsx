@@ -15,7 +15,7 @@ import queryString from 'query-string'
 import Head from 'next/head'
 import { signIn, useSession } from 'next-auth/react'
 import { useAuth } from '~/hooks'
-import Link from 'next/link'
+import Cookies from 'js-cookie'
 
 const DEFAULT_PARAMS: GetListParams = {
   search: '',
@@ -41,14 +41,12 @@ const CalendarPage: React.FC = () => {
       : { ...DEFAULT_PARAMS },
   )
 
-  const { data: session }: any = useSession()
-
   useEffect(() => {
-    const refreshToken: any = session?.user?.refresh_token
+    const refreshToken = Cookies.get('refreshToken')
     if (refreshToken) {
       authGoogleApi({ refreshToken }).finally(() => setShowAuthGoogle(false))
     }
-  }, [session?.user])
+  }, [router?.query?.isAuth])
 
   useEffectOnce(() => {
     const isAccess = abilities?.can('read', 'Calendar')
@@ -263,7 +261,7 @@ const CalendarPage: React.FC = () => {
           <Button
             icon={<GoogleOutlined className="text-white" />}
             style={{ backgroundColor: 'var(--dark-blue)', marginBottom: 10 }}
-            onClick={() => signIn('google')}
+            onClick={() => router.push('http://localhost/api/auth/google')}
           >
             <span className="text-white">Connect With Google</span>
           </Button>

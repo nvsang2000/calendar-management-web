@@ -11,7 +11,6 @@ import getConfig from 'next/config'
 import { StyleProvider } from '@ant-design/cssinjs'
 import { ConfigProvider } from 'antd'
 import { THEME_DEFAULT } from '~/constants'
-import { SessionProvider } from 'next-auth/react'
 
 const routesNoNeedAuth = ['/login']
 const routesNoNeedDefaultLayout = [
@@ -49,9 +48,7 @@ function MyApp({
         >
           <StyleProvider hashPriority="high">
             <ConfigProvider theme={{ ...THEME_DEFAULT }}>
-              <SessionProvider session={pageProps?.session}>
-                <Component />
-              </SessionProvider>
+              <Component />
             </ConfigProvider>
           </StyleProvider>
         </DefaultLayout>
