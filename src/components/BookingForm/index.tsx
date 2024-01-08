@@ -2,7 +2,6 @@ import { Button, Col, DatePicker, Form, Input, Row, Select } from 'antd'
 import { useEffect, useMemo } from 'react'
 import { FIELD_TYPE, OPTION_DURATION } from '~/constants'
 import { BaseFormProps } from '~/interfaces'
-import getConfig from 'next/config'
 
 export default function BookingForm({
   initialValues = {},
@@ -10,9 +9,6 @@ export default function BookingForm({
   loading = false,
 }: BaseFormProps) {
   const [form] = Form.useForm()
-
-  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-  console.log('Múi giờ hiện tại của người dùng:', userTimezone)
 
   useEffect(() => {
     if (Object.keys(initialValues)?.length > 0) {
@@ -63,7 +59,7 @@ export default function BookingForm({
                     placeholder="Select a date"
                     size="large"
                     showTime
-                    format="YYYY/MM/DD HH"
+                    format="YYYY/MM/DD HH A"
                   />
                 </Form.Item>
               </Col>

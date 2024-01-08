@@ -114,9 +114,9 @@ export const FIELD_OPTION = [
 ]
 
 export const OPTION_DURATION = [
-  { value: '15ms', label: '15 Minutes Meeting' },
-  { value: '30ms', label: '30 Minutes Meeting' },
-  { value: '60ms', label: '60 Minutes Meeting' },
+  { value: 15, label: '15 Minutes Meeting' },
+  { value: 30, label: '30 Minutes Meeting' },
+  { value: 60, label: '60 Minutes Meeting' },
 ]
 
 export const LINK_WEBSITE_PATTERN =

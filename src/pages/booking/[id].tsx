@@ -24,9 +24,14 @@ export default function FormViewPage() {
   })
 
   const handleSubmit = async (values: any) => {
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
     const submitValue = {
       ...values,
-      endTime: dayjsInstance(values?.startDay).add(30, 'minutes')
+      timeZone,
+      endTime: dayjsInstance(values?.startTime).add(
+        +values?.duration,
+        'minutes',
+      ),
     }
 
     await createEventCalendarApi(submitValue)

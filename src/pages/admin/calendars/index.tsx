@@ -39,13 +39,12 @@ const CalendarPage: React.FC = () => {
 
   const { data: session }: any = useSession()
 
-  console.log('currentUser', currentUser)
-
   useEffect(() => {
     const refreshToken: any = session?.user?.refresh_token
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+
     if (refreshToken) {
-      console.log('session', refreshToken)
-      authGoogleApi({ refreshToken })
+      authGoogleApi({ refreshToken, timeZone })
     }
   }, [session?.user])
 
