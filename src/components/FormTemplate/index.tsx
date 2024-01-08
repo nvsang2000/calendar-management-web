@@ -54,7 +54,6 @@ export default function FormTemplatet({
     return (
       <>
         <Modal
-          bodyStyle={{ padding: 0 }}
           open={showFormLayout}
           onCancel={() => setShowFormLayout(false)}
           footer={[

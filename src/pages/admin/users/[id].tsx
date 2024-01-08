@@ -22,9 +22,6 @@ export default function UserPage() {
   useEffectOnce(() => {
     const isAccess = abilities?.can('read', 'User')
     if (!isAccess) router.push('/403')
-    return () => {
-      isAccess === undefined
-    }
   })
 
   useEffect(() => {

@@ -15,6 +15,7 @@ import queryString from 'query-string'
 import Head from 'next/head'
 import { signIn, useSession } from 'next-auth/react'
 import { useAuth } from '~/hooks'
+import Link from 'next/link'
 
 const DEFAULT_PARAMS: GetListParams = {
   search: '',
@@ -31,6 +32,9 @@ const CalendarPage: React.FC = () => {
   const [updateting, setUpdateting] = useState(false)
   const [updateId, setUpdateId] = useState<any>('create')
   const [showLayoutUpdate, setShowLayoutUpdate] = useState(false)
+  const [showAuthGoogle, setShowAuthGoogle] = useState(
+    !currentUser?.isAuthGoogle ? true : false,
+  )
   const [params, setParams] = useSetState<any>(
     Object.keys(router.query)?.length > 0
       ? router.query
@@ -41,10 +45,8 @@ const CalendarPage: React.FC = () => {
 
   useEffect(() => {
     const refreshToken: any = session?.user?.refresh_token
-    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-
     if (refreshToken) {
-      authGoogleApi({ refreshToken, timeZone })
+      authGoogleApi({ refreshToken }).finally(() => setShowAuthGoogle(false))
     }
   }, [session?.user])
 
@@ -107,7 +109,6 @@ const CalendarPage: React.FC = () => {
     return (
       <>
         <Modal
-          bodyStyle={{ padding: 0 }}
           open={showLayoutUpdate}
           onCancel={() => setShowLayoutUpdate(false)}
           footer={[
@@ -158,13 +159,62 @@ const CalendarPage: React.FC = () => {
           className={
             '!border-[1px] !border-[color:var(--@very-light-gray)] p-[10px]'
           }
+          title={
+            <div className={'flex justify-between'}>
+              <div className="cursor-pointer text-[18px] capitalize text-black">{`${item?.user?.firstName} ${item?.user?.lastName}`}</div>
+              {!item?.isSync && (
+                <Button type="primary" size="small">
+                  Sync
+                </Button>
+              )}
+            </div>
+          }
           description={
             <div className={'cursor-pointer text-[color:var(--text-color)]'}>
-              <div className="text-[13px] capitalize sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px] ">
-                <div className="font-medium text-[color:var(--text-color)]">{`${item?.user?.firstName} ${item?.user?.lastName}`}</div>
+              <div className="text-[13px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px] ">
                 <div
                   className={
-                    'lg-[13px]  text-[12px] font-light italic text-[color:var(--primary-color)] sm:text-[13px] md:text-[13px] xl:text-[13px]'
+                    'lg-[16px] text-[13px] font-normal text-[color:var(--text-color)] sm:text-[14px] md:text-[16px] xl:text-[16px]'
+                  }
+                >
+                  {`Start time: ${dayjsInstance(item?.startTime).format(
+                    'YYYY/MM/DD HH:mm',
+                  )}`}
+                </div>
+                <div
+                  className={
+                    'lg-[16px] text-[13px] font-normal text-[color:var(--text-color)] sm:text-[14px] md:text-[16px] xl:text-[16px]'
+                  }
+                >
+                  {`End time: ${dayjsInstance(item?.endTime).format(
+                    'YYYY/MM/DD HH:mm',
+                  )}`}
+                </div>
+
+                <div
+                  className={
+                    'lg-[16px] text-[13px] font-normal text-[color:var(--text-color)] sm:text-[14px] md:text-[16px] xl:text-[16px]'
+                  }
+                >
+                  {`Sync with google: ${item?.isSync ? 'Sync' : 'Not sync'}`}
+                </div>
+
+                {item?.meetLink && (
+                  <div
+                    className={
+                      'lg-[16px] text-[13px] font-normal text-[color:var(--text-color)] sm:text-[14px] md:text-[16px] xl:text-[16px]'
+                    }
+                  >
+                    Link:{' '}
+                    <a href={item?.meetLink} target="_blank" rel="noreferrer">
+                      {item?.meetLink}
+                    </a>
+                  </div>
+                )}
+
+                <div
+                  className={
+                    'lg-[13px]  text-[12px] font-light italic text-[var(--primary-color)] sm:text-[13px] md:text-[13px] xl:text-[13px]'
                   }
                 >
                   {dayjsInstance(item?.createdAt).format('DD/MM/YYYY')}
@@ -209,13 +259,16 @@ const CalendarPage: React.FC = () => {
             </Col>
           )}
         </Row>
-        <Button
-          icon={<GoogleOutlined className="text-white" />}
-          style={{ backgroundColor: 'var(--dark-blue)', marginBottom: 10 }}
-          onClick={() => signIn('google')}
-        >
-          <span className="text-white">Connect With Google</span>
-        </Button>
+        {showAuthGoogle && (
+          <Button
+            icon={<GoogleOutlined className="text-white" />}
+            style={{ backgroundColor: 'var(--dark-blue)', marginBottom: 10 }}
+            onClick={() => signIn('google')}
+          >
+            <span className="text-white">Connect With Google</span>
+          </Button>
+        )}
+
         <List
           grid={{ gutter: 20, xs: 1, sm: 1, md: 2, lg: 2, xl: 3, xxl: 4 }}
           loading={loading}

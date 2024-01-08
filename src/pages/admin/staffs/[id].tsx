@@ -22,9 +22,6 @@ export default function StaffPage() {
   useEffectOnce(() => {
     const isAccess = abilities?.can('read', 'Staff')
     if (!isAccess) router.push('/403')
-    return () => {
-      isAccess === undefined
-    }
   })
 
   useEffect(() => {

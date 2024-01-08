@@ -128,7 +128,6 @@ const GroupPage: React.FC = () => {
     return (
       <>
         <Modal
-          bodyStyle={{ padding: 0 }}
           open={showLayoutUpdate}
           onCancel={() => setShowLayoutUpdate(false)}
           footer={[

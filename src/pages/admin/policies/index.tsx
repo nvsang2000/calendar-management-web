@@ -37,9 +37,6 @@ function Policies({}) {
   useEffectOnce(() => {
     const isAccess = abilities?.can('read', 'Policy')
     if (!isAccess) router.push('/403')
-    return () => {
-      isAccess === undefined
-    }
   })
 
   const redirectPolicies = (record: any) => {

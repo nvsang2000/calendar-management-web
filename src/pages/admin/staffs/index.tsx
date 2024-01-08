@@ -30,9 +30,6 @@ const StaffPage: React.FC = () => {
   useEffectOnce(() => {
     const isAccess = abilities?.can('read', 'Staff')
     if (!isAccess) router.push('/403')
-    return () => {
-      isAccess === undefined
-    }
   })
 
   const onActiveChange = async (isActive: boolean, record: any) => {

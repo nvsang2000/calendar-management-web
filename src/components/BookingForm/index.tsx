@@ -59,7 +59,7 @@ export default function BookingForm({
                     placeholder="Select a date"
                     size="large"
                     showTime
-                    format="YYYY/MM/DD HH A"
+                    format="YYYY/MM/DD HH:mm"
                   />
                 </Form.Item>
               </Col>

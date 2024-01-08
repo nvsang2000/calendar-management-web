@@ -20,7 +20,6 @@ export const authOptions: AuthOptions = {
   ],
   callbacks: {
     async jwt({ token, account, profile }: any) {
-      console.log('token', account)
       if (account) {
         token.accessToken = account.access_token
         token.id = profile.id

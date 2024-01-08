@@ -23,9 +23,6 @@ export default function PolicyPage() {
   useEffectOnce(() => {
     const isAccess = abilities?.can('read', 'Policy')
     if (!isAccess) router.push('/403')
-    return () => {
-      isAccess === undefined
-    }
   })
 
   useEffect(() => {
