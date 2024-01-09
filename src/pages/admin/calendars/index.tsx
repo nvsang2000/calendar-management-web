@@ -13,10 +13,10 @@ import { ExclamationCircleOutlined, GoogleOutlined } from '@ant-design/icons'
 import dayjsInstance from '~/utils/dayjs'
 import queryString from 'query-string'
 import Head from 'next/head'
-import { signIn, useSession } from 'next-auth/react'
 import { useAuth } from '~/hooks'
 import Cookies from 'js-cookie'
 import getConfig from 'next/config'
+
 const DEFAULT_PARAMS: GetListParams = {
   search: '',
   page: 1,
@@ -38,21 +38,22 @@ const CalendarPage: React.FC = () => {
     !currentUser?.isAuthGoogle ? true : false,
   )
 
-  const { data: session }: any = useSession()
+  const token = Cookies.get('token')
   const [params, setParams] = useSetState<any>(
     Object.keys(router.query)?.length > 0
       ? router.query
       : { ...DEFAULT_PARAMS },
   )
 
-  console.log('session', session)
   useEffect(() => {
-    if (session?.user) {
-      authGoogleApi({ refreshToken: session?.user?.refresh_token }).finally(
-        () => setShowAuthGoogle(false),
+    const data = parseSafe(token)
+    console.log('token', data)
+    if (data?.refresh_token) {
+      authGoogleApi({ refreshToken: data?.refresh_token }).finally(() =>
+        setShowAuthGoogle(false),
       )
     }
-  }, [session?.user])
+  }, [token])
 
   useEffectOnce(() => {
     const isAccess = abilities?.can('read', 'Calendar')
@@ -267,7 +268,7 @@ const CalendarPage: React.FC = () => {
           <Button
             icon={<GoogleOutlined className="text-white" />}
             style={{ backgroundColor: 'var(--dark-blue)', marginBottom: 10 }}
-            onClick={() => signIn('google')}
+            onClick={() => router.push(`${baseURL}api/auth/google`)}
           >
             <span className="text-white">Connect With Google</span>
           </Button>
