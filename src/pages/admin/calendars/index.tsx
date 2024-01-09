@@ -16,6 +16,7 @@ import Head from 'next/head'
 import { signIn, useSession } from 'next-auth/react'
 import { useAuth } from '~/hooks'
 import Cookies from 'js-cookie'
+import getConfig from 'next/config'
 
 const DEFAULT_PARAMS: GetListParams = {
   search: '',
@@ -35,6 +36,8 @@ const CalendarPage: React.FC = () => {
   const [showAuthGoogle, setShowAuthGoogle] = useState(
     !currentUser?.isAuthGoogle ? true : false,
   )
+  const { publicRuntimeConfig } = getConfig()
+  const baseURL = publicRuntimeConfig.NEXT_PUBLIC_ENV_API_URL
   const [params, setParams] = useSetState<any>(
     Object.keys(router.query)?.length > 0
       ? router.query
@@ -261,7 +264,7 @@ const CalendarPage: React.FC = () => {
           <Button
             icon={<GoogleOutlined className="text-white" />}
             style={{ backgroundColor: 'var(--dark-blue)', marginBottom: 10 }}
-            onClick={() => router.push('http://localhost/api/auth/google')}
+            onClick={() => router.push(`${baseURL}api/auth/google`)}
           >
             <span className="text-white">Connect With Google</span>
           </Button>

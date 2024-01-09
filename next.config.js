@@ -5,8 +5,6 @@ const nextConfig = {
   publicRuntimeConfig: {
     NEXT_PUBLIC_ENV_API_URL: process.env.NEXT_PUBLIC_ENV_API_URL,
     NEXT_PUBLIC_ENV_CLIENT_URL: process.env.NEXT_PUBLIC_ENV_CLIENT_URL,
-    NEXT_PUBLIC_ENV_CLIENT_SECRET: process.env.NEXT_PUBLIC_ENV_CLIENT_SECRET,
-    NEXT_PUBLIC_ENV_JWT_SECRET: process.env.NEXT_PUBLIC_ENV_JWT_SECRET,
   },
   images: {
     dangerouslyAllowSVG: true,
