@@ -31,6 +31,10 @@ export const authOptions: AuthOptions = {
       session.user = token?.token?.account
       return session
     },
+    async redirect({ baseUrl, url }) {
+      console.log('baseUrl', baseUrl, url)
+      return `${process.env.NEXT_PUBLIC_ENV_CLIENT_URL}admin/calendars`
+    },
   },
 }
 export default NextAuth(authOptions)

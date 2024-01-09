@@ -182,7 +182,7 @@ const CustomSider = ({}) => {
                     label: (
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         <span
-                          className={`ml-[4px] inline-block text-[14px] hover:text-primary-color ${
+                          className={`hover:text-primary-color ml-[4px] inline-block text-[14px] ${
                             currentPath === subItem.href
                               ? 'text-primary-color'
                               : 'text-black'
@@ -209,7 +209,7 @@ const CustomSider = ({}) => {
         : {
             label: (
               <span
-                className={`text-[14px] hover:text-primary-color ${
+                className={`hover:text-primary-color text-[14px] ${
                   currentPath === item.href
                     ? 'selected-menu-item text-[color:var(--primary-color)]'
                     : 'text-black'
