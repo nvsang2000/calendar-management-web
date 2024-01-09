@@ -46,6 +46,7 @@ const CalendarPage: React.FC = () => {
       : { ...DEFAULT_PARAMS },
   )
 
+  console.log('refreshToken', refreshToken)
   useEffect(() => {
     if (refreshToken) {
       authGoogleApi({ refreshToken }).finally(() => setShowAuthGoogle(false))
