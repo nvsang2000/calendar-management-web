@@ -39,6 +39,10 @@ const CalendarPage: React.FC = () => {
   )
 
   const token = Cookies.get('token')
+  const data = parseSafe(token)
+  const accessToken = Cookies.get('accessToken')
+  console.log('token', data)
+  console.log('accessToken', accessToken)
   const [params, setParams] = useSetState<any>(
     Object.keys(router.query)?.length > 0
       ? router.query
@@ -46,8 +50,6 @@ const CalendarPage: React.FC = () => {
   )
 
   useEffect(() => {
-    const data = parseSafe(token)
-    console.log('token', data)
     if (data?.refresh_token) {
       authGoogleApi({ refreshToken: data?.refresh_token }).finally(() =>
         setShowAuthGoogle(false),
