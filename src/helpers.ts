@@ -34,7 +34,7 @@ export const imageLoader: any = ({ src, width, quality }: ImageProps) => {
   return `${src}?w=${width}&q=${quality || 75}`
 }
 
-export const parseSafe = (str: string) => {
+export const parseSafe = (str: any) => {
   try {
     const result = JSON.parse(str)
 

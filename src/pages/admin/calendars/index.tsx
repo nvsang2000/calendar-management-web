@@ -17,7 +17,6 @@ import { signIn, useSession } from 'next-auth/react'
 import { useAuth } from '~/hooks'
 import Cookies from 'js-cookie'
 import getConfig from 'next/config'
-
 const DEFAULT_PARAMS: GetListParams = {
   search: '',
   page: 1,
@@ -39,19 +38,21 @@ const CalendarPage: React.FC = () => {
     !currentUser?.isAuthGoogle ? true : false,
   )
 
-  const refreshToken = Cookies.get('refreshToken')
+  const { data: session }: any = useSession()
   const [params, setParams] = useSetState<any>(
     Object.keys(router.query)?.length > 0
       ? router.query
       : { ...DEFAULT_PARAMS },
   )
 
-  console.log('refreshToken', refreshToken)
+  console.log('session', session)
   useEffect(() => {
-    if (refreshToken) {
-      authGoogleApi({ refreshToken }).finally(() => setShowAuthGoogle(false))
+    if (session?.user) {
+      authGoogleApi({ refreshToken: session?.user?.refresh_token }).finally(
+        () => setShowAuthGoogle(false),
+      )
     }
-  }, [refreshToken])
+  }, [session?.user])
 
   useEffectOnce(() => {
     const isAccess = abilities?.can('read', 'Calendar')
@@ -266,14 +267,14 @@ const CalendarPage: React.FC = () => {
           <Button
             icon={<GoogleOutlined className="text-white" />}
             style={{ backgroundColor: 'var(--dark-blue)', marginBottom: 10 }}
-            onClick={() => router.push(`${baseURL}api/auth/google`)}
+            onClick={() => signIn('google')}
           >
             <span className="text-white">Connect With Google</span>
           </Button>
         )}
 
         <List
-          grid={{ gutter: 20, xs: 1, sm: 1, md: 2, lg: 2, xl: 3, xxl: 4 }}
+          grid={{ gutter: 20, xs: 1, sm: 1, md: 2, lg: 2, xl: 2, xxl: 4 }}
           loading={loading}
           itemLayout="horizontal"
           dataSource={calendars}
