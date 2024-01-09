@@ -33,11 +33,13 @@ const CalendarPage: React.FC = () => {
   const [updateting, setUpdateting] = useState(false)
   const [updateId, setUpdateId] = useState<any>('create')
   const [showLayoutUpdate, setShowLayoutUpdate] = useState(false)
+  const { publicRuntimeConfig } = getConfig()
+  const baseURL = publicRuntimeConfig.NEXT_PUBLIC_ENV_API_URL
   const [showAuthGoogle, setShowAuthGoogle] = useState(
     !currentUser?.isAuthGoogle ? true : false,
   )
-  const { publicRuntimeConfig } = getConfig()
-  const baseURL = publicRuntimeConfig.NEXT_PUBLIC_ENV_API_URL
+
+  const refreshToken = Cookies.get('refreshToken')
   const [params, setParams] = useSetState<any>(
     Object.keys(router.query)?.length > 0
       ? router.query
@@ -45,11 +47,10 @@ const CalendarPage: React.FC = () => {
   )
 
   useEffect(() => {
-    const refreshToken = Cookies.get('refreshToken')
     if (refreshToken) {
       authGoogleApi({ refreshToken }).finally(() => setShowAuthGoogle(false))
     }
-  }, [router?.query?.isAuth])
+  }, [refreshToken])
 
   useEffectOnce(() => {
     const isAccess = abilities?.can('read', 'Calendar')
