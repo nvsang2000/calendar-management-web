@@ -11,6 +11,7 @@ import getConfig from 'next/config'
 import { StyleProvider } from '@ant-design/cssinjs'
 import { ConfigProvider } from 'antd'
 import { THEME_DEFAULT } from '~/constants'
+import Cookies from 'js-cookie'
 
 const routesNoNeedAuth = ['/login']
 const routesNoNeedDefaultLayout = [
@@ -59,7 +60,10 @@ function MyApp({
 
 MyApp.getInitialProps = async ({ ctx }: { ctx: any }) => {
   const { res, pathname } = ctx
-  const { accessToken } = nextCookies(ctx)
+  const { accessToken, token } = nextCookies(ctx)
+
+  const testtoken = Cookies.get('token')
+  console.log('token', token, testtoken)
   const { publicRuntimeConfig } = getConfig()
   const baseURL = publicRuntimeConfig.NEXT_PUBLIC_ENV_API_URL
 

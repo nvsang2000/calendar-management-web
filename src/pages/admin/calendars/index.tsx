@@ -38,24 +38,19 @@ const CalendarPage: React.FC = () => {
     !currentUser?.isAuthGoogle ? true : false,
   )
 
-  const token = Cookies.get('token')
-  const data = parseSafe(token)
-  const accessToken = Cookies.get('accessToken')
-  console.log('token', data)
-  console.log('accessToken', accessToken)
   const [params, setParams] = useSetState<any>(
     Object.keys(router.query)?.length > 0
       ? router.query
       : { ...DEFAULT_PARAMS },
   )
 
-  useEffect(() => {
-    if (data?.refresh_token) {
-      authGoogleApi({ refreshToken: data?.refresh_token }).finally(() =>
-        setShowAuthGoogle(false),
-      )
-    }
-  }, [token])
+  // useEffect(() => {
+  //   if (data?.refresh_token) {
+  //     authGoogleApi({ refreshToken: data?.refresh_token }).finally(() =>
+  //       setShowAuthGoogle(false),
+  //     )
+  //   }
+  // }, [token])
 
   useEffectOnce(() => {
     const isAccess = abilities?.can('read', 'Calendar')
